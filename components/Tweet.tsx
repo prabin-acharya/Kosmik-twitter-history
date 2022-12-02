@@ -62,28 +62,28 @@ export const Tweet: NextPage<Props> = ({ tweet }) => {
         <div className={styles.tweetFooter}>
           <div className={styles.tweetFooterLike}>
             <span className={styles.tweetFooterLikeCount}>
-              {/* {tweet.public_metrics.like_count} */}
+              {tweet.public_metrics.like_count}
             </span>
             <span className={styles.tweetFooterLikeLabel}>Likes</span>
           </div>
 
           <div className={styles.tweetFooterReply}>
             <span className={styles.tweetFooterReplyCount}>
-              {/* {tweet.public_metrics.reply_count} */}
+              {tweet.public_metrics.reply_count}
             </span>
             <span className={styles.tweetFooterReplyLabel}>Replies</span>
           </div>
 
           <div className={styles.tweetFooterRetweet}>
             <span className={styles.tweetFooterRetweetCount}>
-              {/* {tweet.public_metrics.retweet_count} */}
+              {tweet.public_metrics.retweet_count}
             </span>
             <span className={styles.tweetFooterRetweetLabel}>Retweets</span>
           </div>
 
           <div className={styles.tweetFooterQuote}>
             <span className={styles.tweetFooterQuoteCount}>
-              {/* {tweet.public_metrics.quote_count} */}
+              {tweet.public_metrics.quote_count}
             </span>
             <span className={styles.tweetFooterQuoteLabel}>Quotes</span>
           </div>
