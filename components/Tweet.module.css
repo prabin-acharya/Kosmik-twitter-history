@@ -1,0 +1,91 @@
+.tweet {
+  width: 35%;
+  padding: 20px;
+  border: 1px solid grey;
+  margin-bottom: 10px;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  font-size: 0.875em;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+}
+
+.tweetHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tweetHeader .tweetHeaderDate {
+  font-size: 0.8rem;
+  color: grey;
+}
+
+.tweetHeaderLeft {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tweetHeaderRight {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.tweetHeaderAvatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.tweetHeaderName {
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.tweetHeaderHandle {
+  font-size: 0.8em;
+  color: grey;
+}
+
+.tweetBody {
+  margin-top: 10px;
+  font-size: 1.1em;
+}
+
+.tweetFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.tweetFooterLeft {
+  display: flex;
+  align-items: center;
+}
+
+.tweetFooterLeft .tweetRetweet {
+  font-size: 0.8rem;
+  color: grey;
+}
+
+.tweetFooterLeft .tweetRetweet .retweetCount {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.tweetFooterRight {
+  display: flex;
+  align-items: center;
+}
+
+.tweetFooterRight .tweetLikes {
+  font-size: 0.8rem;
+  color: grey;
+}
+
+.tweetFooterRight .tweetLikes .likeIcon {
+  margin-right: 5px;
+}
