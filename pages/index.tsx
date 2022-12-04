@@ -1,7 +1,9 @@
 import type { NextPage } from "next";
+import { useRouter } from 'next/router';
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 
+import Link from "next/link";
 import { Tweet } from "../components/Tweet";
 
 interface tweet {
@@ -33,11 +35,29 @@ const Home: NextPage = () => {
     fetchTweets();
   }, []);
 
+
+  const fetchTest = async () => {
+    const res = await fetch("/api/auth/tweet", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const data = await res.json();
+    console.log(data);
+  };
+
+
   return (
     <div className={styles.container}>
       {tweets.map((tweet) => (
         <Tweet key={tweet.id} tweet={tweet} />
       ))}
+      <hr />
+      <Link href={"http://127.0.0.1:3000/api/auth"} >Authorize Twitter</Link>
+      <button onClick={() => {
+        fetchTest()
+      }}>CLick me</button>
     </div>
   );
 };
