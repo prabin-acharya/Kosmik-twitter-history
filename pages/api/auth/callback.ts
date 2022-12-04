@@ -36,7 +36,7 @@ export default async function handler(
   });
 
   try {
-    await db.collection("authTwitter").findOneAndUpdate(
+    const userUpdated = await db.collection("authTwitter").findOneAndUpdate(
       {
         state: state,
       },
@@ -45,7 +45,13 @@ export default async function handler(
           accessToken: accessToken,
           refreshToken: refreshToken,
         },
-      }
+      },
+      { returnDocument: "after" }
+    );
+
+    res.setHeader(
+      "Set-Cookie",
+      `session_ID=${userUpdated.value?._id}; Path=/; HttpOnly`
     );
 
     res.redirect("http://127.0.0.1:3000");
