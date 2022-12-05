@@ -53,9 +53,10 @@ export default async function handler(
     await refreshedClient.v2.me();
 
   const following = await refreshedClient.v2.following(user.data.id);
+
   user.following = following.data;
 
-  const firstId = following.data[8]; // Shane Legg
+  const firstId = following.data[8];
 
   const oldTweets = await refreshedClient.v2.userTimeline(firstId.id, {
     max_results: 9,
@@ -76,7 +77,38 @@ export default async function handler(
     ],
   });
 
-  console.log(oldTweets);
+  console.log("########################################");
 
-  res.status(200).json({ user: user });
+  // console.log(oldTweets);
+  // for await (const tweets of oldTweets) {
+  //   const includes = tweets.
+  // }
+
+  // const oldTweetsOnly = oldTweets.tweets;
+
+  // console.log(oldTweetsOnly[0]);
+
+  const includes = new TwitterV2IncludesHelper(oldTweets);
+  //helper method for getting the user object from the includes userTimeline
+
+  const oldTweetsOnly = [];
+
+  for (const tweet of oldTweets.tweets) {
+    const user = includes.author(tweet);
+    oldTweetsOnly.push({
+      id: tweet.id,
+      text: tweet.text,
+      created_at: tweet.created_at,
+      public_metrics: tweet.public_metrics,
+      profile_image_url: user?.profile_image_url,
+      username: user?.username,
+      name: user?.name,
+    });
+  }
+
+  res.status(200).json({
+    user: user,
+    oldTweets: oldTweetsOnly,
+    oldTweetsDetail: oldTweets,
+  });
 }

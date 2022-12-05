@@ -29,6 +29,7 @@ interface User {
 
 interface userDetails {
   user: { data: User; following: User[] };
+  oldTweets: tweet[];
 }
 
 const Home: NextPage = () => {
