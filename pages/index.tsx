@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 
@@ -20,43 +21,46 @@ interface tweet {
   name: string;
 }
 
+interface user {
+  id: number;
+  name: string;
+  username: string;
+}
+
 const Home: NextPage = () => {
   const [tweets, setTweets] = useState<tweet[]>([]);
+  const [user, setUser] = useState<user>();
+  const [loading, setLoading] = useState(true);
 
-  const fetchTweets = async () => {
-    const res = await fetch("/api/tweets");
+  const fetchUser = async () => {
+    const res = await fetch("/api/auth/home");
     const data = await res.json();
     console.log(data);
-    setTweets(data.tweets);
+    setUser(data.user);
+    setLoading(false);
   };
 
   useEffect(() => {
-    fetchTweets();
+    fetchUser();
   }, []);
 
-
-  const fetchTest = async () => {
-    const res = await fetch("/api/auth/tweet", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      }
-    });
-    const data = await res.json();
-    console.log(data);
-  };
-
+  // if (loading) {
+  //   return <div>loading...</div>;
+  // }
 
   return (
     <div className={styles.container}>
-      {tweets.map((tweet) => (
-        <Tweet key={tweet.id} tweet={tweet} />
-      ))}
-      <hr />
-      <Link href={"http://127.0.0.1:3000/api/auth"} >Authorize Twitter</Link>
-      <button onClick={() => {
-        fetchTest()
-      }}>CLick me</button>
+      <div className={styles.header}>
+        <div className={styles.name}>
+          <span> - {user?.name} </span>
+          <span>@{user?.username}</span>
+        </div>
+      </div>
+
+      {!user?.name && (
+        <Link href={"http://127.0.0.1:3000/api/auth"}>Authorize Twitter</Link>
+      )}
+      <button onClick={() => {}}>CLick me</button>
     </div>
   );
 };
