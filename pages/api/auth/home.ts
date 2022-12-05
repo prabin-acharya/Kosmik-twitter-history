@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { TwitterApi } from "twitter-api-v2";
-import clientPromise from "./../../../lib/mongodb";
+import { TwitterApi, TwitterV2IncludesHelper } from "twitter-api-v2";
+import clientPromise from "../../../lib/mongodb";
 
 interface User {
   id: string;
@@ -54,6 +54,16 @@ export default async function handler(
 
   const following = await refreshedClient.v2.following(user.data.id);
   user.following = following.data;
+
+  const firstId = following.data[8]; // Shane Legg
+
+  const oldTweets = await refreshedClient.v2.userTimeline(firstId.id, {
+    max_results: 9,
+    end_time: "2020-07-05T00:00:00.52Z",
+    "tweet.fields": ["id", "text", "created_at", "public_metrics", "source"],
+  });
+
+  console.log(oldTweets);
 
   res.status(200).json({ user: user });
 }
