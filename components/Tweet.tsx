@@ -1,11 +1,11 @@
 import { NextPage } from "next";
-import React from "react";
 import Image from "next/image";
+import React from "react";
 
 import { formatDate } from "./utils";
 
-import styles from "./Tweet.module.css";
 import Link from "next/link";
+import styles from "./Tweet.module.css";
 
 interface Props {
   tweet: {

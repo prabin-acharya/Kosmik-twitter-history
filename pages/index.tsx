@@ -77,6 +77,10 @@ const Home: NextPage = () => {
           <Link href={"http://127.0.0.1:3000/api/auth"}>Authorize Twitter</Link>
         )}
         <button onClick={() => {}}>CLick me</button>
+
+        {userDetails?.oldTweets?.map((tweet) => (
+          <Tweet key={tweet.id} tweet={tweet} />
+        ))}
       </div>
     </div>
   );

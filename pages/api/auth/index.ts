@@ -17,7 +17,15 @@ export default async function handler(
 
   const { url, codeVerifier, state } = twitterClient.generateOAuth2AuthLink(
     callbackURL,
-    { scope: ["tweet.read", "users.read", "offline.access", "bookmark.read"] }
+    {
+      scope: [
+        "tweet.read",
+        "users.read",
+        "offline.access",
+        "bookmark.read",
+        "follows.read",
+      ],
+    }
   );
 
   try {
