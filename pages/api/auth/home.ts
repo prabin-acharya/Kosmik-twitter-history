@@ -67,6 +67,13 @@ export default async function handler(
       "referenced_tweets.id",
       "in_reply_to_user_id",
     ],
+    "user.fields": [
+      "id",
+      "name",
+      "description",
+      "public_metrics",
+      "profile_image_url",
+    ],
   });
 
   console.log(oldTweets);
