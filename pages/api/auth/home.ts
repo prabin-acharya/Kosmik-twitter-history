@@ -3,6 +3,13 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { TwitterApi } from "twitter-api-v2";
 import clientPromise from "./../../../lib/mongodb";
 
+interface User {
+  id: string;
+  name: string;
+  username: string;
+  profile_image_url?: string;
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -42,11 +49,11 @@ export default async function handler(
     }
   );
 
-  const user = await refreshedClient.v2.me();
+  const user: { data: User; following?: User[] } =
+    await refreshedClient.v2.me();
 
   const following = await refreshedClient.v2.following(user.data.id);
+  user.following = following.data;
 
-  console.log(following);
-
-  res.status(200).json({ user: user.data, following: following.data });
+  res.status(200).json({ user: user });
 }

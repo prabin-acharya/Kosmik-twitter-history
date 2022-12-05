@@ -21,22 +21,26 @@ interface tweet {
   name: string;
 }
 
-interface user {
+interface User {
   id: number;
   name: string;
   username: string;
 }
 
+interface userDetails {
+  user: { data: User; following: User[] };
+}
+
 const Home: NextPage = () => {
   const [tweets, setTweets] = useState<tweet[]>([]);
-  const [user, setUser] = useState<user>();
+  const [userDetails, setUserDetails] = useState<userDetails>();
   const [loading, setLoading] = useState(true);
 
   const fetchUser = async () => {
     const res = await fetch("/api/auth/home");
     const data = await res.json();
     console.log(data);
-    setUser(data.user);
+    setUserDetails(data);
     setLoading(false);
   };
 
@@ -50,17 +54,29 @@ const Home: NextPage = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles.name}>
-          <span> - {user?.name} </span>
-          <span>@{user?.username}</span>
+      {/* create a container div with two columns, one on left occupying 30% of screen and other on the right */}
+      <div className={styles.sidebar}>
+        <div className={styles.following}>
+          <ul>
+            {userDetails?.user?.following?.slice(0, 10)?.map((user) => (
+              <li key={user.username}>{user.username}</li>
+            ))}
+          </ul>
         </div>
       </div>
+      <div className={styles.main}>
+        <div className={styles.header}>
+          <div className={styles.name}>
+            <span> - {userDetails?.user?.data?.name} </span>
+            <span>@{userDetails?.user?.data?.username}</span>
+          </div>
+        </div>
 
-      {!user?.name && (
-        <Link href={"http://127.0.0.1:3000/api/auth"}>Authorize Twitter</Link>
-      )}
-      <button onClick={() => {}}>CLick me</button>
+        {!userDetails?.user?.data?.name && (
+          <Link href={"http://127.0.0.1:3000/api/auth"}>Authorize Twitter</Link>
+        )}
+        <button onClick={() => {}}>CLick me</button>
+      </div>
     </div>
   );
 };
