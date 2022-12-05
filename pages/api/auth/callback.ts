@@ -51,7 +51,7 @@ export default async function handler(
 
     res.setHeader(
       "Set-Cookie",
-      `session_ID=${userUpdated.value?._id}; Path=/; HttpOnly`
+      `session_ID=${userUpdated.value?._id}; HttpOnly; Path=/; Max-Age=2592000`
     );
 
     res.redirect("http://127.0.0.1:3000");
