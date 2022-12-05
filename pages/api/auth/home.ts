@@ -61,6 +61,12 @@ export default async function handler(
     max_results: 9,
     end_time: "2020-07-05T00:00:00.52Z",
     "tweet.fields": ["id", "text", "created_at", "public_metrics", "source"],
+    expansions: [
+      "author_id",
+      "entities.mentions.username",
+      "referenced_tweets.id",
+      "in_reply_to_user_id",
+    ],
   });
 
   console.log(oldTweets);
