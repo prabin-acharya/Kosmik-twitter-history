@@ -46,5 +46,7 @@ export default async function handler(
 
   const following = await refreshedClient.v2.following(user.data.id);
 
+  console.log(following);
+
   res.status(200).json({ user: user.data, following: following.data });
 }
