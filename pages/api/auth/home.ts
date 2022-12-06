@@ -85,7 +85,7 @@ export default async function handler(
   const following = await refreshedClient.v2.following(user.data.id);
   user.following = following.data;
 
-  const randomizedFollowing = getShuffledArray(following.data)?.slice(0, 7);
+  const randomizedFollowing = getShuffledArray(following.data)?.slice(0, 14);
 
   const randomizedFollowingOrderedTweets:
     | Promise<
@@ -105,7 +105,7 @@ export default async function handler(
       // random time interval for each user
       const startDate = randomDate();
       const endDate = new Date(startDate);
-      endDate.setMonth(endDate.getMonth() + 1);
+      endDate.setMonth(endDate.getMonth() + 2);
 
       const userTimeline = await refreshedClient.v2.userTimeline(user.id, {
         max_results: 5,
