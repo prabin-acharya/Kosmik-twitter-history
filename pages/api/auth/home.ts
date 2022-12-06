@@ -7,7 +7,7 @@ import {
 } from "twitter-api-v2";
 import clientPromise from "../../../lib/mongodb";
 
-function getRandomItems(array: any[]) {
+function getShuffledArray(array: any[]) {
   if (array.length < 3) {
     return;
   }
@@ -76,7 +76,7 @@ export default async function handler(
   const following = await refreshedClient.v2.following(user.data.id);
   user.following = following.data;
 
-  const randomizedFollowing = getRandomItems(following.data)?.slice(0, 2);
+  const randomizedFollowing = getShuffledArray(following.data)?.slice(0, 2);
 
   const randomizedFollowingOrderedTweets:
     | Promise<
@@ -146,13 +146,10 @@ export default async function handler(
 
   const flattenedTweets = allOldTweetsOnly?.flat();
 
-  console.log("#############################");
-  console.log(flattenedTweets);
-
-  console.log(flattenedTweets);
+  const shuffledTweets = getShuffledArray(flattenedTweets);
 
   res.status(200).json({
     user: user,
-    oldTweets: flattenedTweets,
+    oldTweets: shuffledTweets,
   });
 }
