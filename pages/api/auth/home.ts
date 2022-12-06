@@ -85,7 +85,7 @@ export default async function handler(
   const following = await refreshedClient.v2.following(user.data.id);
   user.following = following.data;
 
-  const randomizedFollowing = getShuffledArray(following.data)?.slice(0, 14);
+  const randomizedFollowing = getShuffledArray(following.data)?.slice(0, 7);
 
   const randomizedFollowingOrderedTweets:
     | Promise<
@@ -168,3 +168,15 @@ export default async function handler(
     oldTweets: shuffledTweets,
   });
 }
+
+// now do list
+// Steps:-
+// fetch user's list
+// fetch list timeline
+
+// and timeline of selected accounts
+// Steps:-
+// eg Karpathy, dan_abramov,
+
+// api docs say timeline can only be fetched to last 7 days or 800 mentions/rev chronological;  3200 tweets
+// but can we fetch old tweets from specific date range?

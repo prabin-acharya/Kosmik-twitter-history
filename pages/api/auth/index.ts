@@ -24,6 +24,7 @@ export default async function handler(
         "offline.access",
         "bookmark.read",
         "follows.read",
+        "list.read",
       ],
     }
   );

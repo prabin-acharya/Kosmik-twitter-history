@@ -57,7 +57,7 @@
   position: fixed;
   height: 100%;
   overflow: auto;
-  border: 1px solid green;
+  border: 2px solid pink;
   padding: 1rem;
 }
 
@@ -88,13 +88,28 @@
   }
 }
 
-.sidebar ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  width: 200px;
-  background-color: #f1f1f1;
-  position: fixed;
-  height: 100%;
-  overflow: auto;
+.search {
+  border: 3px solid purple;
+  display: block;
+  padding: 8px 16px;
+}
+
+.search h4 {
+  margin: 5px 0px;
+}
+
+.search input {
+  width: 100%;
+}
+
+.following {
+  border: 3px solid red;
+  display: block;
+  padding: 8px 16px;
+}
+
+.lists {
+  border: 3px solid green;
+  display: block;
+  padding: 8px 16px;
 }

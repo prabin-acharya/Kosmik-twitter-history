@@ -32,23 +32,49 @@ interface userDetails {
   oldTweets: tweet[];
 }
 
+interface List {
+  id: number;
+  name: string;
+  description: string;
+  members_count: number;
+  followers_count: number;
+  owner: {
+    id: number;
+    name: string;
+    username: string;
+    profile_image_url: string;
+  };
+}
+
 const Home: NextPage = () => {
   const [tweets, setTweets] = useState<tweet[]>([]);
   const [userDetails, setUserDetails] = useState<userDetails>();
+  const [listFollowed, setListFollowed] = useState<List[]>();
+  const [listLoading, setListLoading] = useState(true);
   const [loading, setLoading] = useState(true);
 
-  const fetchUser = async () => {
-    const res = await fetch("/api/auth/home");
-    const data = await res.json();
-    console.log(data);
-    setUserDetails(data);
-    setLoading(false);
-  };
-
   useEffect(() => {
+    const fetchUser = async () => {
+      const res = await fetch("/api/auth/home");
+      const data = await res.json();
+      console.log(data);
+      setUserDetails(data);
+      setLoading(false);
+      fetchUserFollowedLists();
+    };
+
+    const fetchUserFollowedLists = async () => {
+      const res = await fetch("/api/auth/list");
+      const data = await res.json();
+      console.log(data);
+      setListFollowed(data.lists);
+      setListLoading(false);
+    };
+
     fetchUser();
   }, []);
 
+  console.log(userDetails?.user.following.slice(0, 10));
   // if (loading) {
   //   return <div>loading...</div>;
   // }
@@ -57,10 +83,29 @@ const Home: NextPage = () => {
     <div className={styles.container}>
       {/* create a container div with two columns, one on left occupying 30% of screen and other on the right */}
       <div className={styles.sidebar}>
+        <div className={styles.search}>
+          <h4>Search</h4>
+          <input type="text" />
+        </div>
         <div className={styles.following}>
+          <h4>Following</h4>
           <ul>
             {userDetails?.user?.following?.slice(0, 10)?.map((user) => (
               <li key={user.username}>{user.username}</li>
+            ))}
+          </ul>
+        </div>
+        <div className={styles.lists}>
+          <h4>Lists</h4>
+          <ul>
+            {listFollowed?.slice(0, 10)?.map((list) => (
+              <li key={list.id}>
+                <b>{list.name}</b>
+                <br />
+                <span>by @{list.owner.username}</span>
+                <br />
+                <span>{list.description}</span>
+              </li>
             ))}
           </ul>
         </div>
