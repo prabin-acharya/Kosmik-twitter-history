@@ -63,7 +63,7 @@
 
 .main {
   margin-left: 350px;
-  padding: 1px 16px;
+  padding: 20px 16px;
   height: 1000px;
 }
 
@@ -88,14 +88,22 @@
   }
 }
 
+.search h4,
+.following h4,
+.lists h4 {
+  margin: 5px 0px;
+}
+
+.search,
+.following,
+.lists {
+  margin: 5px 0px;
+  padding: 12px 16px;
+}
+
 .search {
   border: 3px solid purple;
   display: block;
-  padding: 8px 16px;
-}
-
-.search h4 {
-  margin: 5px 0px;
 }
 
 .search input {
@@ -105,11 +113,9 @@
 .following {
   border: 3px solid red;
   display: block;
-  padding: 8px 16px;
 }
 
 .lists {
   border: 3px solid green;
   display: block;
-  padding: 8px 16px;
 }

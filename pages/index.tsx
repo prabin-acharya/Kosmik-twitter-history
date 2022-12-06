@@ -83,12 +83,23 @@ const Home: NextPage = () => {
     <div className={styles.container}>
       {/* create a container div with two columns, one on left occupying 30% of screen and other on the right */}
       <div className={styles.sidebar}>
+        {!userDetails?.user?.data?.name && (
+          <Link href={"http://127.0.0.1:3000/api/auth"}>Authorize Twitter</Link>
+        )}
+
+        <div className={styles.header}>
+          <div className={styles.name}>
+            <span> - {userDetails?.user?.data?.name} </span>
+            <span>@{userDetails?.user?.data?.username}</span>
+          </div>
+        </div>
+
         <div className={styles.search}>
           <h4>Search</h4>
           <input type="text" />
         </div>
         <div className={styles.following}>
-          <h4>Following</h4>
+          <h4>Recent Follows</h4>
           <ul>
             {userDetails?.user?.following?.slice(0, 10)?.map((user) => (
               <li key={user.username}>{user.username}</li>
@@ -111,18 +122,6 @@ const Home: NextPage = () => {
         </div>
       </div>
       <div className={styles.main}>
-        <div className={styles.header}>
-          <div className={styles.name}>
-            <span> - {userDetails?.user?.data?.name} </span>
-            <span>@{userDetails?.user?.data?.username}</span>
-          </div>
-        </div>
-
-        {!userDetails?.user?.data?.name && (
-          <Link href={"http://127.0.0.1:3000/api/auth"}>Authorize Twitter</Link>
-        )}
-        <button onClick={() => {}}>CLick me</button>
-
         {userDetails?.oldTweets?.map((tweet) => (
           <Tweet key={tweet.id} tweet={tweet} />
         ))}
