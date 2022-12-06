@@ -144,10 +144,15 @@ export default async function handler(
 
   const allOldTweetsOnly = await Promise.all(randomizedFollowingOrderedTweets);
 
-  console.log("++++++++++++++++++++++++", allOldTweetsOnly);
+  const flattenedTweets = allOldTweetsOnly?.flat();
+
+  console.log("#############################");
+  console.log(flattenedTweets);
+
+  console.log(flattenedTweets);
 
   res.status(200).json({
     user: user,
-    oldTweets: allOldTweetsOnly,
+    oldTweets: flattenedTweets,
   });
 }
