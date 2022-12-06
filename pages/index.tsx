@@ -55,7 +55,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await fetch("/api/auth/home");
+      const res = await fetch("/api/auth/home?listId=1539497752140206080");
       const data = await res.json();
       console.log(data);
       setUserDetails(data);
@@ -64,7 +64,7 @@ const Home: NextPage = () => {
     };
 
     const fetchUserFollowedLists = async () => {
-      const res = await fetch("/api/auth/list");
+      const res = await fetch("/api/auth/lists");
       const data = await res.json();
       console.log(data);
       setListFollowed(data.lists);
@@ -112,6 +112,7 @@ const Home: NextPage = () => {
             {listFollowed?.slice(0, 10)?.map((list) => (
               <li key={list.id}>
                 <b>{list.name}</b>
+                <span>{list.id}</span>
                 <br />
                 <span>by @{list.owner.username}</span>
                 <br />

@@ -47,6 +47,9 @@ export default async function handler(
 ) {
   const userId = req.cookies.session_ID;
 
+  const listId = req.query.listId;
+  const from = req.query.from;
+
   // mongodb
   const client = await clientPromise;
   const db = client.db("twihistory-nextjs");
@@ -87,6 +90,23 @@ export default async function handler(
 
   const randomizedFollowing = getShuffledArray(following.data)?.slice(0, 7);
 
+  // get memebers of the list
+  const membersOfList = await refreshedClient.v2.listMembers(listId as string);
+
+  const listMembers = [];
+
+  for await (const user of membersOfList) {
+    listMembers.push({
+      id: user.id,
+      name: user.name,
+      username: user.username,
+    });
+  }
+
+  const members = listMembers.slice(0, 50);
+
+  //
+
   const randomizedFollowingOrderedTweets:
     | Promise<
         | {
@@ -100,12 +120,14 @@ export default async function handler(
           }[]
         | undefined
       >[]
-    | undefined = randomizedFollowing?.map(async (user) => {
+    | undefined = members?.map(async (user) => {
     try {
       // random time interval for each user
       const startDate = randomDate();
       const endDate = new Date(startDate);
       endDate.setMonth(endDate.getMonth() + 2);
+
+      console.log(user);
 
       const userTimeline = await refreshedClient.v2.userTimeline(user.id, {
         max_results: 5,
@@ -162,6 +184,8 @@ export default async function handler(
   const flattenedTweets = allOldTweetsOnly?.flat();
 
   const shuffledTweets = getShuffledArray(flattenedTweets);
+
+  console.log(shuffledTweets);
 
   res.status(200).json({
     user: user,
