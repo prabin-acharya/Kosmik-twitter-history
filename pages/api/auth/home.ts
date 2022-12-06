@@ -25,6 +25,15 @@ function getShuffledArray(array: any[]) {
   return arrayCopy;
 }
 
+function randomDate(
+  start: Date = new Date(2014, 12, 1),
+  end: Date = new Date(2020, 12, 8)
+) {
+  return new Date(
+    start.getTime() + Math.random() * (end.getTime() - start.getTime())
+  );
+}
+
 interface User {
   id: string;
   name: string;
@@ -93,9 +102,15 @@ export default async function handler(
       >[]
     | undefined = randomizedFollowing?.map(async (user) => {
     try {
+      // random time interval for each user
+      const startDate = randomDate();
+      const endDate = new Date(startDate);
+      endDate.setMonth(endDate.getMonth() + 1);
+
       const userTimeline = await refreshedClient.v2.userTimeline(user.id, {
         max_results: 5,
-        end_time: "2020-07-05T00:00:00.52Z",
+        start_time: startDate.toISOString(),
+        end_time: endDate.toISOString(),
         "tweet.fields": [
           "id",
           "text",
