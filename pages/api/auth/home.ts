@@ -76,7 +76,7 @@ export default async function handler(
   const following = await refreshedClient.v2.following(user.data.id);
   user.following = following.data;
 
-  const randomizedFollowing = getShuffledArray(following.data)?.slice(0, 2);
+  const randomizedFollowing = getShuffledArray(following.data)?.slice(0, 7);
 
   const randomizedFollowingOrderedTweets:
     | Promise<
