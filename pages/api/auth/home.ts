@@ -77,19 +77,7 @@ export default async function handler(
     ],
   });
 
-  console.log("########################################");
-
-  // console.log(oldTweets);
-  // for await (const tweets of oldTweets) {
-  //   const includes = tweets.
-  // }
-
-  // const oldTweetsOnly = oldTweets.tweets;
-
-  // console.log(oldTweetsOnly[0]);
-
   const includes = new TwitterV2IncludesHelper(oldTweets);
-  //helper method for getting the user object from the includes userTimeline
 
   const oldTweetsOnly = [];
 
