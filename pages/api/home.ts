@@ -5,7 +5,7 @@ import {
   TwitterApi,
   TwitterV2IncludesHelper,
 } from "twitter-api-v2";
-import clientPromise from "../../../lib/mongodb";
+import clientPromise from "../../lib/mongodb";
 
 function getShuffledArray(array: any[]) {
   if (array.length < 3) {
@@ -146,6 +146,7 @@ export default async function handler(
           "referenced_tweets.id",
           "in_reply_to_user_id",
         ],
+        "media.fields": ["url"],
         "user.fields": [
           "id",
           "name",

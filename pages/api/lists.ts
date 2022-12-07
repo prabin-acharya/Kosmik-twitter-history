@@ -6,7 +6,7 @@ import {
   TwitterV2IncludesHelper,
 } from "twitter-api-v2";
 
-import clientPromise from "../../../lib/mongodb";
+import clientPromise from "../../lib/mongodb";
 
 interface User {
   id: string;

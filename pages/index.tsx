@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 
@@ -52,10 +53,11 @@ const Home: NextPage = () => {
   const [listFollowed, setListFollowed] = useState<List[]>();
   const [listLoading, setListLoading] = useState(true);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await fetch("/api/auth/home?listId=1539497752140206080");
+      const res = await fetch("/api/home?listId=1539497752140206080");
       const data = await res.json();
       console.log(data);
       setUserDetails(data);
@@ -64,7 +66,7 @@ const Home: NextPage = () => {
     };
 
     const fetchUserFollowedLists = async () => {
-      const res = await fetch("/api/auth/lists");
+      const res = await fetch("/api/lists");
       const data = await res.json();
       console.log(data);
       setListFollowed(data.lists);
@@ -123,9 +125,19 @@ const Home: NextPage = () => {
         </div>
       </div>
       <div className={styles.main}>
-        {userDetails?.oldTweets?.map((tweet) => (
-          <Tweet key={tweet.id} tweet={tweet} />
-        ))}
+        <div className={styles.mainHeader}>
+          <b>Home</b>
+        </div>
+        <div className={styles.tweetContainer}>
+          {userDetails?.oldTweets?.map((tweet) => (
+            <div
+              key={tweet.id}
+              onClick={() => router.push(`/tweet/${tweet.id}`)}
+            >
+              <Tweet tweet={tweet} />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
