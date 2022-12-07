@@ -21,6 +21,7 @@ interface TweetDetails {
     profile_image_url: string;
     username: string;
     name: string;
+    author_id: number;
   };
   includes?: {};
 }
