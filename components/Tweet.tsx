@@ -23,27 +23,27 @@ interface Props {
     profile_image_url: string;
     username: string;
     name: string;
+    authorId: number;
+  };
+}
+
+interface UserDetail {
+  user: {
+    data: {
+      id: number;
+      name: string;
+      username: string;
+      description: string;
+    };
   };
 }
 
 export const Tweet: NextPage<Props> = ({ tweet }) => {
   const [showUserPopup, setShowUserPopup] = useState<Boolean>(false);
-  const [userData, setUserData] = useState();
-  const [userLoading, setUserLoading] = useState(false);
-
-  const fetchUserData = async () => {
-    const res = await fetch("/api/home?listId=1539497752140206080");
-    const data = await res.json();
-    console.log(data);
-    setUserData(data);
-    // setUserLoading(false);
-  };
 
   const handleMouseEnter = async () => {
-    console.log("--------------");
     if (!showUserPopup) {
       setShowUserPopup(true);
-      // fetchUserData();
     }
   };
 
@@ -91,7 +91,7 @@ export const Tweet: NextPage<Props> = ({ tweet }) => {
             </span>
           </div>
         </div>
-        {showUserPopup && <UserDetail />}
+        {showUserPopup && <UserDetail authorId={tweet.authorId} />}
 
         <div className={styles.tweetBody}>
           <p className={styles.tweetText}>{tweet.text}</p>

@@ -147,13 +147,7 @@ export default async function handler(
           "in_reply_to_user_id",
         ],
         "media.fields": ["url"],
-        "user.fields": [
-          "id",
-          "name",
-          "description",
-          "public_metrics",
-          "profile_image_url",
-        ],
+        "user.fields": ["id", "name", "public_metrics", "profile_image_url"],
       });
 
       const includes = new TwitterV2IncludesHelper(userTimeline);
@@ -169,6 +163,7 @@ export default async function handler(
           profile_image_url: user?.profile_image_url,
           username: user?.username,
           name: user?.name,
+          authorId: user?.id,
         });
       }
 

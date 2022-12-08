@@ -20,6 +20,7 @@ interface tweet {
   profile_image_url: string;
   username: string;
   name: string;
+  authorId: number;
 }
 
 interface User {
