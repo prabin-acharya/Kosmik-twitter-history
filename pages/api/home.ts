@@ -29,9 +29,12 @@ function randomDate(
   start: Date = new Date(2014, 12, 1),
   end: Date = new Date(2020, 12, 8)
 ) {
-  return new Date(
+  const dateFrom = new Date(
     start.getTime() + Math.random() * (end.getTime() - start.getTime())
   );
+  const dateTo = new Date(dateFrom);
+  dateTo.setMonth(dateTo.getMonth() + 2);
+  return { dateFrom, dateTo };
 }
 
 interface User {
@@ -53,11 +56,17 @@ export default async function handler(
 
   if (userIdsString && typeof userIdsString === "string") {
     userIds = userIdsString.split(",");
-    console.log("userIdsString", userIds);
   }
 
-  // for date
-  const from = req.query.from;
+  let from = req.query.from;
+  let to = req.query.to;
+
+  let { dateFrom, dateTo } = randomDate();
+
+  if (from || to) {
+    dateFrom = new Date(from as string);
+    dateTo = new Date(to as string);
+  }
 
   // mongodb
   const client = await clientPromise;
@@ -129,7 +138,7 @@ export default async function handler(
     members = randomizedFollowing ? randomizedFollowing : [];
   }
 
-  //
+  console.log(dateFrom, dateTo, "############55");
 
   const randomizedFollowingOrderedTweets:
     | Promise<
@@ -147,14 +156,11 @@ export default async function handler(
     | undefined = members?.map(async (user) => {
     try {
       // random time interval for each user
-      const startDate = randomDate();
-      const endDate = new Date(startDate);
-      endDate.setMonth(endDate.getMonth() + 2);
 
       const userTimeline = await refreshedClient.v2.userTimeline(user.id, {
         max_results: 5,
-        start_time: startDate.toISOString(),
-        end_time: endDate.toISOString(),
+        start_time: dateFrom.toISOString(),
+        end_time: dateTo.toISOString(),
         "tweet.fields": [
           "id",
           "text",
@@ -206,7 +212,7 @@ export default async function handler(
 
   res.status(200).json({
     user: user,
-    oldTweets: shuffledTweets,
+    tweets: shuffledTweets,
   });
 }
 

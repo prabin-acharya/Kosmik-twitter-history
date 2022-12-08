@@ -54,8 +54,6 @@ export default async function handler(
       `session_ID=${userUpdated.value?._id}; HttpOnly; Path=/; Max-Age=2592000`
     );
 
-    console.log(process.env.HOME_URL);
-
     res.redirect(process.env.APP_URL as string);
   } catch (err) {
     console.log(err);

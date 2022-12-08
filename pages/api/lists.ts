@@ -100,7 +100,7 @@ export default async function handler(
   });
 
   res.status(200).json({
-    lists,
-    userOwnedLists: userOwnedLists.data.data,
+    followedLists: lists,
+    ownedLists: userOwnedLists.data.data,
   });
 }
