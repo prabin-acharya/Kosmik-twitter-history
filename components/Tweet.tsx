@@ -1,6 +1,8 @@
 import { NextPage } from "next";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+
+import { UserDetail } from "./UserDetail";
 
 import { formatDate } from "./utils";
 
@@ -25,6 +27,30 @@ interface Props {
 }
 
 export const Tweet: NextPage<Props> = ({ tweet }) => {
+  const [showUserPopup, setShowUserPopup] = useState<Boolean>(false);
+  const [userData, setUserData] = useState();
+  const [userLoading, setUserLoading] = useState(false);
+
+  const fetchUserData = async () => {
+    const res = await fetch("/api/home?listId=1539497752140206080");
+    const data = await res.json();
+    console.log(data);
+    setUserData(data);
+    // setUserLoading(false);
+  };
+
+  const handleMouseEnter = async () => {
+    console.log("--------------");
+    if (!showUserPopup) {
+      setShowUserPopup(true);
+      // fetchUserData();
+    }
+  };
+
+  const handleMouseLeave = async () => {
+    setShowUserPopup(false);
+  };
+
   return (
     <div className={styles.container}>
       <div
@@ -37,7 +63,11 @@ export const Tweet: NextPage<Props> = ({ tweet }) => {
         // }}
       >
         <div className={styles.tweetHeader}>
-          <div className={styles.tweetHeaderLeft}>
+          <div
+            className={styles.tweetHeaderLeft}
+            onMouseOver={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
             <Image
               className={styles.tweetHeaderAvatar}
               src={tweet.profile_image_url}
@@ -61,6 +91,7 @@ export const Tweet: NextPage<Props> = ({ tweet }) => {
             </span>
           </div>
         </div>
+        {showUserPopup && <UserDetail />}
 
         <div className={styles.tweetBody}>
           <p className={styles.tweetText}>{tweet.text}</p>
