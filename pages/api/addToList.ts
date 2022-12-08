@@ -21,16 +21,6 @@ export default async function handler(
 ) {
   const userId = req.cookies.session_ID;
 
-  console.log(
-    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-  );
-  console.log(
-    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-  );
-  console.log(
-    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-  );
-
   // mongodb
   const client = await clientPromise;
   const db = client.db("twihistory-nextjs");
@@ -68,8 +58,6 @@ export default async function handler(
     await refreshedClient.v2.me();
 
   // add user to list
-
-  console.log("+++++++++++++++++++++++++=");
 
   const listId = req.body.listId;
   const userId2 = req.body.selectedMention;

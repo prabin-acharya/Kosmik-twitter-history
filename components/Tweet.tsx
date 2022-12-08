@@ -32,6 +32,11 @@ interface Props {
       end: number;
     }[];
   };
+  ownedLists: {
+    id: number;
+    name: string;
+    private: Boolean;
+  }[];
 }
 
 interface UserDetail {
@@ -45,7 +50,7 @@ interface UserDetail {
   };
 }
 
-export const Tweet: NextPage<Props> = ({ tweet }) => {
+export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
   const [showUserPopup, setShowUserPopup] = useState<Boolean>(false);
   const [showMenu, setShowMenu] = useState<Boolean>(false);
 
@@ -122,7 +127,9 @@ export const Tweet: NextPage<Props> = ({ tweet }) => {
               ref={menuRef}
             >
               ...
-              {showMenu && <ListMenu mentions={tweet.mentions} />}
+              {showMenu && (
+                <ListMenu mentions={tweet.mentions} ownedLists={ownedLists} />
+              )}
             </span>
           </div>
         </div>

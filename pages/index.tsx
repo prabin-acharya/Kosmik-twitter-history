@@ -58,6 +58,13 @@ const Home: NextPage = () => {
   const [tweets, setTweets] = useState<tweet[]>([]);
   const [userDetails, setUserDetails] = useState<userDetails>();
   const [listFollowed, setListFollowed] = useState<List[]>();
+  const [ownedLists, setOwnedLists] = useState<
+    {
+      id: number;
+      name: string;
+      private: Boolean;
+    }[]
+  >([]);
   const [listLoading, setListLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -69,14 +76,15 @@ const Home: NextPage = () => {
       console.log(data, "______");
       setUserDetails(data);
       setLoading(false);
-      fetchUserFollowedLists();
+      fetchLists();
     };
 
-    const fetchUserFollowedLists = async () => {
+    const fetchLists = async () => {
       const res = await fetch("/api/lists");
       const data = await res.json();
       console.log(data);
       setListFollowed(data.lists);
+      setOwnedLists(data.userOwnedLists);
       setListLoading(false);
     };
 
@@ -117,6 +125,7 @@ const Home: NextPage = () => {
         </div>
         <div className={styles.lists}>
           <h4>Lists</h4>
+          <h5>Followed</h5>
           <ul>
             {listFollowed?.slice(0, 10)?.map((list) => (
               <li key={list.id}>
@@ -126,6 +135,14 @@ const Home: NextPage = () => {
                 <span>by @{list.owner.username}</span>
                 <br />
                 <span>{list.description}</span>
+              </li>
+            ))}
+          </ul>
+          <h5>Owned</h5>
+          <ul>
+            {ownedLists?.slice(0, 5)?.map((list) => (
+              <li key={list.id}>
+                <b>{list.name}</b>
               </li>
             ))}
           </ul>
@@ -141,7 +158,7 @@ const Home: NextPage = () => {
               key={tweet.id}
               // onClick={() => router.push(`/tweet/${tweet.id}`)}
             >
-              <Tweet tweet={tweet} />
+              <Tweet tweet={tweet} ownedLists={ownedLists} />
             </div>
           ))}
         </div>

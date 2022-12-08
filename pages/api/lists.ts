@@ -94,7 +94,13 @@ export default async function handler(
     });
   }
 
+  const userOwnedLists = await refreshedClient.v2.listsOwned(user.data.id, {
+    max_results: 100,
+    "list.fields": ["private"],
+  });
+
   res.status(200).json({
     lists,
+    userOwnedLists: userOwnedLists.data.data,
   });
 }

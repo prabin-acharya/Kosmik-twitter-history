@@ -1,5 +1,4 @@
 import { NextPage } from "next";
-import Image from "next/image";
 import React, { useEffect } from "react";
 
 import { ListModal } from "./ListModal";
@@ -13,9 +12,14 @@ interface Props {
     start?: number;
     end?: number;
   }[];
+  ownedLists: {
+    id: number;
+    name: string;
+    private: Boolean;
+  }[];
 }
 
-export const ListMenu: NextPage<Props> = ({ mentions }) => {
+export const ListMenu: NextPage<Props> = ({ mentions, ownedLists }) => {
   const [showModal, setShowModal] = React.useState(false);
   const [selectedMention, setSelectedMention] = React.useState({});
   return (
@@ -40,6 +44,7 @@ export const ListMenu: NextPage<Props> = ({ mentions }) => {
             isOpen={showModal}
             onRequestClose={() => setShowModal(false)}
             selectedMention={selectedMention}
+            ownedLists={ownedLists}
           >
             <div>
               <button onClick={() => setShowModal(false)}>Close Modal</button>
