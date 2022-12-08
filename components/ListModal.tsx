@@ -8,6 +8,7 @@ interface Props {
   children: React.ReactNode;
   isOpen: boolean;
   onRequestClose: () => void;
+  selectedMention: any;
 }
 
 interface List {
@@ -21,6 +22,7 @@ export const ListModal: NextPage<Props> = ({
   children,
   isOpen,
   onRequestClose,
+  selectedMention,
 }) => {
   const [modalOpen, setModalOpen] = useState(isOpen);
   const [ownedLists, setOwnedLists] = useState<List[]>();
@@ -41,6 +43,8 @@ export const ListModal: NextPage<Props> = ({
   if (!modalOpen) {
     return null;
   }
+
+  console.log(selectedMention, "*&*(&*&*&&&&&&&&&&&&&&&&&&&&&&&&&");
 
   return (
     <div className={styles.backdrop}>

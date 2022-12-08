@@ -17,7 +17,7 @@ interface Props {
 
 export const ListMenu: NextPage<Props> = ({ mentions }) => {
   const [showModal, setShowModal] = React.useState(false);
-
+  const [selectedMention, setSelectedMention] = React.useState({});
   return (
     <div className={styles.container}>
       <ul>
@@ -27,6 +27,7 @@ export const ListMenu: NextPage<Props> = ({ mentions }) => {
             onClick={(e) => {
               e.stopPropagation();
               setShowModal(true);
+              setSelectedMention(mention);
             }}
           >
             Add @{mention.username} to list
@@ -38,6 +39,7 @@ export const ListMenu: NextPage<Props> = ({ mentions }) => {
           <ListModal
             isOpen={showModal}
             onRequestClose={() => setShowModal(false)}
+            selectedMention={selectedMention}
           >
             <div>
               <button onClick={() => setShowModal(false)}>Close Modal</button>
