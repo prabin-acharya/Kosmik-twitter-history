@@ -40,7 +40,6 @@ export const ListMenu: NextPage<Props> = ({ mentions }) => {
             onRequestClose={() => setShowModal(false)}
           >
             <div>
-              <h1>Hello from the Modal!</h1>
               <button onClick={() => setShowModal(false)}>Close Modal</button>
             </div>
           </ListModal>
