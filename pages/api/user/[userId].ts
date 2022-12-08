@@ -14,8 +14,6 @@ export default async function handler(
 ) {
   const userId = req.cookies.session_ID;
 
-  console.log("*************************************", userId);
-
   // mongodb
   const client = await clientPromise;
   const db = client.db("twihistory-nextjs");
@@ -53,8 +51,6 @@ export default async function handler(
 
   //
   const accId = req.query.userId;
-
-  console.log("-----");
 
   const user = await refreshedClient.v2.user(accId as string, {
     "user.fields": ["description", "public_metrics"],

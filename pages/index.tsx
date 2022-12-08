@@ -65,15 +65,46 @@ const Home: NextPage = () => {
       private: Boolean;
     }[]
   >([]);
+  const [selectUsers, setSelectUsers] = useState<
+    {
+      id: number;
+      name: string;
+      username: string;
+    }[]
+  >([]);
+
   const [listLoading, setListLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [selectedLists, setSelectedLists] = useState<
+    {
+      id: number;
+      name: string;
+      private: Boolean;
+    }[]
+  >([]);
+
+  const fetchCustom = async () => {
+    setLoading(true);
+    let url = `/api/home?`;
+    if (selectedLists.length > 0) {
+      url += `listId=${selectedLists[0]?.id}`;
+    } else if (selectUsers.length > 0) {
+      url += `&userIds=${selectUsers.map((user) => user.id).join(",")}`;
+    }
+
+    console.log("===============++++++++++++++++++++++, ", url);
+
+    const res = await fetch(url);
+    const data = await res.json();
+    setUserDetails(data);
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const res = await fetch("/api/home?listId=1539497752140206080");
+    const fetchHome = async () => {
+      const res = await fetch(`/api/home`);
       const data = await res.json();
-      console.log(data, "______");
       setUserDetails(data);
       setLoading(false);
       fetchLists();
@@ -82,19 +113,19 @@ const Home: NextPage = () => {
     const fetchLists = async () => {
       const res = await fetch("/api/lists");
       const data = await res.json();
-      console.log(data);
       setListFollowed(data.lists);
       setOwnedLists(data.userOwnedLists);
       setListLoading(false);
     };
 
-    fetchUser();
-  }, []);
+    fetchHome();
+  }, [selectedLists]);
 
-  console.log(userDetails?.user.following.slice(0, 10));
-  // if (loading) {
-  //   return <div>loading...</div>;
-  // }
+  // const [date, setDate] = useState<string>("");
+
+  // const dateString = date;
+
+  console.log(selectUsers);
 
   return (
     <div className={styles.container}>
@@ -114,15 +145,47 @@ const Home: NextPage = () => {
         <div className={styles.search}>
           <h4>Search</h4>
           <input type="text" />
+          {selectedLists?.map((list) => (
+            <div key={list.id}>
+              <span>{list.name}</span>
+              <button
+                onClick={() => {
+                  setSelectedLists(
+                    selectedLists.filter((l) => l.id !== list.id)
+                  );
+                }}
+              >
+                X
+              </button>
+            </div>
+          ))}
+
+          {selectUsers?.map((user) => (
+            <div key={user.id}>
+              <span>{user.name}</span>
+              <button
+                onClick={() => {
+                  setSelectUsers(selectUsers.filter((u) => u.id !== user.id));
+                }}
+              >
+                X
+              </button>
+            </div>
+          ))}
+
+          <button
+            onClick={() => {
+              fetchCustom();
+            }}
+          >
+            Go
+          </button>
         </div>
-        <div className={styles.following}>
-          <h4>Recent Follows</h4>
-          <ul>
-            {userDetails?.user?.following?.slice(0, 10)?.map((user) => (
-              <li key={user.username}>{user.username}</li>
-            ))}
-          </ul>
+        <div className={styles.dateSelector}>
+          <h4>Date</h4>
+          {/* <input type="date" onChange={(e) => setDate(e.target.value)} /> */}
         </div>
+
         <div className={styles.lists}>
           <h4>Lists</h4>
           <h5>Followed</h5>
@@ -141,8 +204,35 @@ const Home: NextPage = () => {
           <h5>Owned</h5>
           <ul>
             {ownedLists?.slice(0, 5)?.map((list) => (
-              <li key={list.id}>
+              <li
+                key={list.id}
+                onClick={() => {
+                  setSelectUsers([]);
+                  setSelectedLists([...selectedLists, list]);
+                }}
+              >
                 <b>{list.name}</b>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className={styles.following}>
+          <h4>Recent Follows</h4>
+          <ul>
+            {userDetails?.user?.following?.slice(0, 10)?.map((user) => (
+              <li
+                key={user.username}
+                onClick={() => {
+                  console.log("===");
+                  setSelectedLists([]);
+                  setSelectUsers([
+                    ...selectUsers,
+                    { id: user.id, name: user.name, username: user.username },
+                  ]);
+                }}
+              >
+                {user.username}
               </li>
             ))}
           </ul>
@@ -152,19 +242,39 @@ const Home: NextPage = () => {
         <div className={styles.mainHeader}>
           <b>Home</b>
         </div>
-        <div className={styles.tweetContainer}>
-          {userDetails?.oldTweets?.map((tweet) => (
-            <div
-              key={tweet.id}
-              // onClick={() => router.push(`/tweet/${tweet.id}`)}
-            >
-              <Tweet tweet={tweet} ownedLists={ownedLists} />
-            </div>
-          ))}
-        </div>
+        {loading ? (
+          <div className={styles.tweetContainer}>
+            <h1>Loading...</h1>
+            <h1>Loading...</h1>
+            <h1>Loading...</h1>
+          </div>
+        ) : (
+          <div className={styles.tweetContainer}>
+            {userDetails?.oldTweets?.map((tweet) => (
+              <div
+                key={tweet.id}
+                // onClick={() => router.push(`/tweet/${tweet.id}`)}
+              >
+                <Tweet tweet={tweet} ownedLists={ownedLists} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 export default Home;
+
+// console.log(dateString);
+
+// // Convert the date string to a number of milliseconds
+
+// const date2 = Date.parse(dateString);
+// console.log(date2);
+
+// // Create a Date object from the number of milliseconds
+// const dateObject = new Date(date);
+
+// console.log(dateObject);

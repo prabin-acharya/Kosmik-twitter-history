@@ -68,7 +68,6 @@ export default async function handler(
     ],
     "user.fields": ["name", "username", "profile_image_url", "description"],
   });
-  console.log(tweetId, "============((((()))))==========");
 
   res.json({
     tweet,

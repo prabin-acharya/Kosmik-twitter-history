@@ -37,7 +37,6 @@ export const ListModal: NextPage<Props> = ({
   }
 
   const addToList = async (selectedMention: number, listId: number) => {
-    console.log("55555555555555555555");
     const res = await fetch("/api/addToList", {
       method: "POST",
       headers: {
@@ -49,7 +48,6 @@ export const ListModal: NextPage<Props> = ({
       }),
     });
     const data = await res.json();
-    console.log(data);
   };
 
   return (

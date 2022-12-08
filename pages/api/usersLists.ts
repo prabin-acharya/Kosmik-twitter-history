@@ -21,8 +21,6 @@ export default async function handler(
 ) {
   const userId = req.cookies.session_ID;
 
-  console.log("=============================", userId);
-
   // mongodb
   const client = await clientPromise;
   const db = client.db("twihistory-nextjs");

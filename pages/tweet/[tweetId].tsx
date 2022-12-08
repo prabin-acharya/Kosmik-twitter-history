@@ -36,7 +36,6 @@ const TweetId: NextPage = () => {
     const fetchTweet = async () => {
       const res = await fetch(`/api/tweet/${tweetId}`);
       const data = await res.json();
-      console.log(data.tweet, "---/////");
       setTweet(data.tweet);
       setLoading(false);
     };

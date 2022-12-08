@@ -95,15 +95,22 @@
 
 .search h4,
 .following h4,
-.lists h4 {
+.lists h4,
+.dateSelector h4 {
   margin: 5px 0px;
 }
 
 .search,
 .following,
-.lists {
+.lists,
+.dateSelector {
   margin: 5px 0px;
   padding: 12px 16px;
+}
+
+.dateSelector {
+  border: 3px solid maroon;
+  display: block;
 }
 
 .search {
