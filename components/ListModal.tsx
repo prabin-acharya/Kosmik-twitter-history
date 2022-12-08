@@ -45,6 +45,23 @@ export const ListModal: NextPage<Props> = ({
   }
 
   console.log(selectedMention, "*&*(&*&*&&&&&&&&&&&&&&&&&&&&&&&&&");
+  console.log(ownedLists);
+
+  const addToList = async (selectedMention: number, listId: number) => {
+    console.log("55555555555555555555");
+    const res = await fetch("/api/addToList", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        listId,
+        selectedMention,
+      }),
+    });
+    const data = await res.json();
+    console.log(data);
+  };
 
   return (
     <div className={styles.backdrop}>
@@ -59,7 +76,14 @@ export const ListModal: NextPage<Props> = ({
             <ul>
               {ownedLists?.slice(0, 5).map((list) => (
                 <div key={list.id}>
-                  <li>{list.name}</li>
+                  <li
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToList(selectedMention.id, list.id);
+                    }}
+                  >
+                    {list.name}
+                  </li>
                 </div>
               ))}
             </ul>

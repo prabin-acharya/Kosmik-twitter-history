@@ -21,7 +21,15 @@ export default async function handler(
 ) {
   const userId = req.cookies.session_ID;
 
-  console.log("=============================", userId);
+  console.log(
+    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+  );
+  console.log(
+    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+  );
+  console.log(
+    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+  );
 
   // mongodb
   const client = await clientPromise;
@@ -59,15 +67,16 @@ export default async function handler(
   const user: { data: User; following?: User[] } =
     await refreshedClient.v2.me();
 
-  // Get User Owned Lists
-  // const lists = await refreshedClient.v2.listsByUserId(user.data.id);
+  // add user to list
 
-  const lists = await refreshedClient.v2.listsOwned(user.data.id, {
-    max_results: 100,
-    "list.fields": ["private"],
-  });
+  console.log("+++++++++++++++++++++++++=");
+
+  const listId = req.body.listId;
+  const userId2 = req.body.selectedMention;
+
+  const editedList = await refreshedClient.v2.addListMember(listId, userId2);
 
   res.status(200).json({
-    lists: lists.data,
+    editedList,
   });
 }
