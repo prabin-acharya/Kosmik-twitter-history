@@ -1,7 +1,8 @@
 import { NextPage } from "next";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
+import { ListMenu } from "./ListMenu";
 import { UserDetail } from "./UserDetail";
 
 import { formatDate } from "./utils";
@@ -24,6 +25,12 @@ interface Props {
     username: string;
     name: string;
     authorId: number;
+    mentions: {
+      username: string;
+      id: number;
+      start: number;
+      end: number;
+    }[];
   };
 }
 
@@ -40,6 +47,7 @@ interface UserDetail {
 
 export const Tweet: NextPage<Props> = ({ tweet }) => {
   const [showUserPopup, setShowUserPopup] = useState<Boolean>(false);
+  const [showMenu, setShowMenu] = useState<Boolean>(false);
 
   const handleMouseEnter = async () => {
     if (!showUserPopup) {
@@ -49,6 +57,25 @@ export const Tweet: NextPage<Props> = ({ tweet }) => {
 
   const handleMouseLeave = async () => {
     setShowUserPopup(false);
+  };
+
+  const menuRef = React.useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef]);
+
+  const handleClickMenu = () => {
+    setShowMenu(!showMenu);
   };
 
   return (
@@ -83,11 +110,19 @@ export const Tweet: NextPage<Props> = ({ tweet }) => {
                 @{tweet.username}
               </span>
             </div>
+            <span className={styles.tweetHeaderDate}>
+              {formatDate(tweet.created_at)}
+            </span>
           </div>
 
           <div className={styles.tweetHeaderRight}>
-            <span className={styles.tweetHeaderDate}>
-              {formatDate(tweet.created_at)}
+            <span
+              className={styles.tweetMore}
+              onClick={handleClickMenu}
+              ref={menuRef}
+            >
+              ...
+              {showMenu && <ListMenu mentions={tweet.mentions} />}
             </span>
           </div>
         </div>

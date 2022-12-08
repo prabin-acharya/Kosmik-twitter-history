@@ -21,6 +21,12 @@ interface tweet {
   username: string;
   name: string;
   authorId: number;
+  mentions: {
+    username: string;
+    id: number;
+    start: number;
+    end: number;
+  }[];
 }
 
 interface User {
@@ -60,7 +66,7 @@ const Home: NextPage = () => {
     const fetchUser = async () => {
       const res = await fetch("/api/home?listId=1539497752140206080");
       const data = await res.json();
-      console.log(data);
+      console.log(data, "______");
       setUserDetails(data);
       setLoading(false);
       fetchUserFollowedLists();
@@ -133,7 +139,7 @@ const Home: NextPage = () => {
           {userDetails?.oldTweets?.map((tweet) => (
             <div
               key={tweet.id}
-              onClick={() => router.push(`/tweet/${tweet.id}`)}
+              // onClick={() => router.push(`/tweet/${tweet.id}`)}
             >
               <Tweet tweet={tweet} />
             </div>

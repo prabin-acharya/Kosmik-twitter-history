@@ -164,6 +164,7 @@ export default async function handler(
           username: user?.username,
           name: user?.name,
           authorId: user?.id,
+          mentions: tweet.entities?.mentions,
         });
       }
 

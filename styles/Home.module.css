@@ -37,13 +37,16 @@
 }
 
 @media (prefers-color-scheme: dark) {
+
   .card,
   .footer {
     border-color: #222;
   }
+
   .code {
     background: #111;
   }
+
   .logo img {
     filter: invert(1);
   }
@@ -73,9 +76,11 @@
     height: auto;
     position: relative;
   }
+
   .sidebar a {
     float: left;
   }
+
   div.content {
     margin-left: 0;
   }
@@ -128,7 +133,7 @@
   border: 1px solid green;
   position: fixed;
   width: 100%;
-  z-index: 999;
+  z-index: 1;
   background-color: white;
   padding: 10px 8px;
 }
