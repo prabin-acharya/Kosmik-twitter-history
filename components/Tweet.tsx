@@ -115,14 +115,11 @@ export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
                 @{tweet.username}
               </span>
             </div>
-            <span className={styles.tweetHeaderDate}>
-              {formatDate(tweet.created_at)}
-            </span>
           </div>
 
           <div className={styles.tweetHeaderRight}>
             <span
-              className={styles.tweetMore}
+              className={styles.tweetMenu}
               onClick={handleClickMenu}
               ref={menuRef}
             >
@@ -130,6 +127,9 @@ export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
               {showMenu && (
                 <ListMenu mentions={tweet.mentions} ownedLists={ownedLists} />
               )}
+            </span>
+            <span className={styles.tweetHeaderDate}>
+              {formatDate(tweet.created_at)}
             </span>
           </div>
         </div>
