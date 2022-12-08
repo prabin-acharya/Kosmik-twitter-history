@@ -61,12 +61,20 @@
   overflow: auto;
   padding: 1rem;
   background-color: #222b35;
+  border-right: 2px solid #444549;
 }
 
 .main {
   margin-left: 400px;
   /* padding: 20px 16px; */
   height: 1000px;
+}
+
+.main h1 {
+  font-size: 1.2rem;
+  color: white;
+  margin: 0;
+  padding: 5px 14px;
 }
 
 @media screen and (max-width: 700px) {
@@ -113,7 +121,6 @@
 }
 
 .search {
-  border: 3px solid purple;
   display: block;
 }
 
@@ -122,12 +129,10 @@
 }
 
 .following {
-  border: 3px solid red;
   display: block;
 }
 
 .lists {
-  border: 3px solid green;
   display: block;
 }
 
@@ -136,14 +141,122 @@
   justify-content: space-between;
   align-items: center;
   margin: 0 0 1rem 0;
-  border: 1px solid green;
+  /* border: 1px solid green; */
   position: fixed;
   width: 100%;
   z-index: 1;
   background-color: #222b35;
-  padding: 10px 8px;
+  padding: 14px 8px;
+  border-bottom: 1px solid black;
+  box-shadow: 0 0 5px #444549;
+
 }
 
 .tweetContainer {
-  padding: 3rem 3rem;
+  padding: 5rem 3rem;
+}
+
+.sidebar input {
+  background-color: #2f4056;
+  color: white;
+  border: 1px solid #2f4056;
+  padding: 4px 4px;
+  outline: 1px solid #030c18;
+
+}
+
+.sidebar input:hover {
+  cursor: text;
+}
+
+.sidebar input:focus {
+  background-color: #2f4056;
+  color: white;
+  border: 1px solid #2f4056;
+  outline: 1px solid #4d81c5;
+}
+
+
+.sidebar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 3px 10px;
+  overflow: hidden;
+  background-color: #222b35;
+}
+
+.sidebar h4,
+.sidebar h5 {
+  color: white;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 8px;
+}
+
+.sidebar ul li {
+  margin-bottom: 5px;
+  padding: 5px 8px;
+  background-color: #2f4056;
+  border: 1px solid #0e243f;
+  border-radius: 3px;
+}
+
+/* hover */
+.sidebar ul li:hover {
+  cursor: pointer;
+}
+
+
+
+.lists .name {
+  font-size: 1rem;
+  font-weight: 600;
+  /* display: block; */
+}
+
+.lists .ownerName {
+  font-size: 0.8rem;
+  font-weight: 400;
+  /* display: block; */
+  padding-left: 10px;
+}
+
+.lists .ownerUsername {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #a0a0a0;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.profile {
+  padding: 10px;
+  border-bottom: 4px solid #444549;
+  display: flex;
+  flex-direction: row;
+}
+
+.tweetHeaderAvatar {
+  width: 50px;
+  height: 50px;
+  margin: 0px 8px;
+  border-radius: 50%;
+}
+
+.profile .name {
+  font-size: 1.4rem;
+  display: block;
+  font-weight: 600;
+  margin-bottom: 3px;
+  margin-right: 10px;
+}
+
+.profile .username {
+  font-size: 1rem;
+  /* display: block; */
+  font-weight: 400;
+  color: #a0a0a0;
 }

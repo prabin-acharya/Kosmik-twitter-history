@@ -33,6 +33,7 @@ interface User {
   id: number;
   name: string;
   username: string;
+  profile_image_url?: string;
 }
 
 interface userTimeline {
@@ -129,9 +130,24 @@ const Home: NextPage = () => {
         )}
 
         <div className={styles.header}>
-          <div className={styles.name}>
-            <span> - {userTimeline?.user?.data?.name} </span>
-            <span>@{userTimeline?.user?.data?.username}</span>
+          <div className={styles.profile}>
+            {userTimeline?.user?.data?.profile_image_url && (
+              <Image
+                className={styles.tweetHeaderAvatar}
+                src={userTimeline?.user?.data?.profile_image_url}
+                alt="avatar"
+                width={30}
+                height={30}
+              />
+            )}
+            <div>
+              <span className={styles.name}>
+                {userTimeline?.user?.data?.name}
+              </span>
+              <span className={styles.username}>
+                @{userTimeline?.user?.data?.username}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -199,10 +215,14 @@ const Home: NextPage = () => {
           <ul>
             {lists?.followedLists?.slice(0, 10)?.map((list) => (
               <li key={list.id}>
-                <b>{list.name}</b>
-                <span>{list.id}</span>
-                <br />
-                <span>by @{list.owner.username}</span>
+                <span className={styles.name}>{list.name}</span>
+                {/* <span>{list.id}</span> */}
+                {/* <br /> */}
+                <span className={styles.ownerName}>{list.owner.name}</span>
+                <span className={styles.ownerUsername}>
+                  {" "}
+                  @{list.owner.username}
+                </span>
                 <br />
                 <span>{list.description}</span>
               </li>
@@ -246,7 +266,7 @@ const Home: NextPage = () => {
       </div>
       <div className={styles.main}>
         <div className={styles.mainHeader}>
-          <b>Home</b>
+          <h1>Kosmik</h1>
         </div>
         {isLoading ? (
           <div className={styles.tweetContainer}>

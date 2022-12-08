@@ -101,8 +101,9 @@ export default async function handler(
     }
   );
 
-  const user: { data: User; following?: User[] } =
-    await refreshedClient.v2.me();
+  const user: { data: User; following?: User[] } = await refreshedClient.v2.me({
+    "user.fields": ["id", "name", "username", "profile_image_url"],
+  });
   const following = await refreshedClient.v2.following(user.data.id);
   user.following = following.data;
 
@@ -138,8 +139,6 @@ export default async function handler(
     members = randomizedFollowing ? randomizedFollowing : [];
   }
 
-  console.log(dateFrom, dateTo, "############55");
-
   const randomizedFollowingOrderedTweets:
     | Promise<
         | {
@@ -155,8 +154,6 @@ export default async function handler(
       >[]
     | undefined = members?.map(async (user) => {
     try {
-      // random time interval for each user
-
       const userTimeline = await refreshedClient.v2.userTimeline(user.id, {
         max_results: 5,
         start_time: dateFrom.toISOString(),
