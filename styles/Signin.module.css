@@ -1,0 +1,110 @@
+.signin {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    width: 450px;
+    margin: auto;
+    margin-top: 140px;
+    justify-content: center;
+    padding: 40px 60px;
+}
+
+.signin h1 {
+    text-align: center;
+    margin-bottom: 0px;
+    color: rgba(33, 138, 195, 0.837);
+}
+
+.signin form {
+    margin-top: 0px;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 0px;
+}
+
+.signin form label {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.signin form input {
+    margin-bottom: 4px;
+    border: 1px solid #d0d0d0;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 16px;
+    transition: box-shadow 240ms;
+}
+
+.signin form input:focus {
+    /* box-shadow: 0 0 0 4px rgba(21, 156, 228, 0.4); */
+    border: 1px solid rgba(0, 146, 224, 0.829);
+    outline: none;
+}
+
+.signin form button {
+    margin: 15px 0px;
+    border: 1px solid rgb(0, 46, 82);
+    border-radius: 5px;
+    background-color: rgba(33, 138, 195, 0.837);
+    color: white;
+    font-size: 18px;
+    height: 42px;
+}
+
+.signin form button:hover {
+    /* background-color: rgba(0, 146, 224, 0.829); */
+    cursor: pointer;
+}
+
+.signin form button:disabled {
+    /* background-color: rgba(82, 143, 191, 0.767); */
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+.signin form span {
+    margin: auto;
+}
+
+.signin form span a {
+    color: rgba(33, 138, 195, 0.837);
+    text-decoration: none;
+    margin-left: 4px;
+}
+
+.signin form span a:hover {
+    color: rgb(0, 67, 103);
+}
+
+.error {
+    color: red;
+}
+
+.error p {
+    margin: 5px;
+    margin-bottom: 10px;
+}
+
+
+.container button {
+    background-color: antiquewhite;
+    padding: 10px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /* space between */
+    padding: 10px 90px;
+    justify-content: space-between;
+    font-weight: 600;
+
+}
+
+.container button:hover {
+    cursor: pointer;
+}

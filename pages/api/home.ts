@@ -50,6 +50,19 @@ export default async function handler(
 ) {
   const userId = req.cookies.session_ID;
 
+  console.log("+++++");
+  console.log(userId);
+
+  if (!userId) {
+    console.log("_____________________");
+    res.status(401).json({
+      Error: " User not authenticated",
+    });
+    return;
+  }
+
+  console.log("----");
+
   const listId = req.query.listId;
   const userIdsString = req.query.userIds;
   let userIds;

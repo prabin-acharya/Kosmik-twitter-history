@@ -3,7 +3,10 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 
+import { setDefaultResultOrder } from "dns";
 import Link from "next/link";
+import Router from "next/router";
+import { Spinner } from "../components/Spinner";
 import { Tweet } from "../components/Tweet";
 
 interface tweet {
@@ -106,16 +109,25 @@ const Home: NextPage = () => {
   // first fetch
   useEffect(() => {
     const fetchHome = async () => {
-      const res = await fetch(`/api/home`);
-      const data = await res.json();
-      setUserTimeline(data.home);
-      setLists(data.lists);
-      setisLoading(false);
+      try {
+        const res = await fetch(`/api/home`);
+        if (res.status == 401) Router.push("/signin");
+        const data = await res.json();
+        setUserTimeline(data.home);
+        setLists(data.lists);
+        setisLoading(false);
+      } catch (error) {
+        console.log(error, "___++++++");
+      }
     };
 
     // Promise.all([fetchHome(), fetchLists()]);
     fetchHome();
   }, [selectedLists]);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className={styles.container}>
