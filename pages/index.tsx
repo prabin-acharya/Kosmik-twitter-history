@@ -1,6 +1,5 @@
-import type { NextPage } from "next";
+import type { NextPage, NextPageContext } from "next";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 
@@ -59,6 +58,7 @@ interface List {
       username: string;
       profile_image_url: string;
     };
+    private: false;
   }[];
 }
 
@@ -108,22 +108,17 @@ const Home: NextPage = () => {
     const fetchHome = async () => {
       const res = await fetch(`/api/home`);
       const data = await res.json();
-      setUserTimeline(data);
+      setUserTimeline(data.home);
+      setLists(data.lists);
       setisLoading(false);
     };
 
-    const fetchLists = async () => {
-      const res = await fetch("/api/lists");
-      const data = await res.json();
-      setLists(data);
-    };
-
-    Promise.all([fetchHome(), fetchLists()]);
+    // Promise.all([fetchHome(), fetchLists()]);
+    fetchHome();
   }, [selectedLists]);
 
   return (
     <div className={styles.container}>
-      {/* create a container div with two columns, one on left occupying 30% of screen and other on the right */}
       <div className={styles.sidebar}>
         {!userTimeline?.user?.data?.name && (
           <Link href={"/api/auth"}>Authorize Twitter</Link>
@@ -214,13 +209,20 @@ const Home: NextPage = () => {
           <h5>Followed</h5>
           <ul>
             {lists?.followedLists?.slice(0, 10)?.map((list) => (
-              <li key={list.id}>
+              <li
+                key={list.id}
+                onClick={() => {
+                  setSelectUsers([]);
+                  setSelectedLists([
+                    ...selectedLists,
+                    { id: list.id, name: list.name, private: list.private },
+                  ]);
+                }}
+              >
                 <span className={styles.name}>{list.name}</span>
-                {/* <span>{list.id}</span> */}
-                {/* <br /> */}
+
                 <span className={styles.ownerName}>{list.owner.name}</span>
                 <span className={styles.ownerUsername}>
-                  {" "}
                   @{list.owner.username}
                 </span>
                 <br />

@@ -1,6 +1,13 @@
 import { NextPage } from "next";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import {
+  AiOutlineHeart,
+  AiOutlineMessage,
+  AiOutlineRetweet,
+} from "react-icons/ai";
+import { FaComment } from "react-icons/fa";
+import { MdOutlineMoreHoriz } from "react-icons/md";
 
 import { ListMenu } from "./ListMenu";
 import { UserDetail } from "./UserDetail";
@@ -83,6 +90,11 @@ export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
     setShowMenu(!showMenu);
   };
 
+  const closeMenu = () => {
+    console.log("=================");
+    setShowMenu(false);
+  };
+
   return (
     <div className={styles.container}>
       <div
@@ -123,7 +135,7 @@ export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
               onClick={handleClickMenu}
               ref={menuRef}
             >
-              ...
+              <MdOutlineMoreHoriz className={styles.tweetMenuIcon} />
               {showMenu && (
                 <ListMenu mentions={tweet.mentions} ownedLists={ownedLists} />
               )}
@@ -141,31 +153,29 @@ export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
 
         <div className={styles.tweetFooter}>
           <div className={styles.tweetFooterLike}>
+            {/* <span className={styles.tweetFooterLikeLabel}>Likes</span> */}
+            <AiOutlineHeart className={styles.tweetFooterLikeIcon} />
             <span className={styles.tweetFooterLikeCount}>
               {tweet.public_metrics?.like_count}
             </span>
-            <span className={styles.tweetFooterLikeLabel}>Likes</span>
-          </div>
-
-          <div className={styles.tweetFooterReply}>
-            <span className={styles.tweetFooterReplyCount}>
-              {tweet.public_metrics?.reply_count}
-            </span>
-            <span className={styles.tweetFooterReplyLabel}>Replies</span>
           </div>
 
           <div className={styles.tweetFooterRetweet}>
+            {/* <span className={styles.tweetFooterRetweetLabel}>Retweets</span>
+             */}
+            <AiOutlineRetweet className={styles.tweetFooterRetweetIcon} />
             <span className={styles.tweetFooterRetweetCount}>
-              {tweet.public_metrics?.retweet_count}
+              {tweet.public_metrics?.retweet_count +
+                tweet.public_metrics?.quote_count}
             </span>
-            <span className={styles.tweetFooterRetweetLabel}>Retweets</span>
           </div>
 
-          <div className={styles.tweetFooterQuote}>
-            <span className={styles.tweetFooterQuoteCount}>
-              {tweet.public_metrics?.quote_count}
+          <div className={styles.tweetFooterReply}>
+            {/* <span className={styles.tweetFooterReplyLabel}>Replies</span> */}
+            <FaComment className={styles.tweetFooterReplyIcon} />
+            <span className={styles.tweetFooterReplyCount}>
+              {tweet.public_metrics?.reply_count}
             </span>
-            <span className={styles.tweetFooterQuoteLabel}>Quotes</span>
           </div>
         </div>
       </div>

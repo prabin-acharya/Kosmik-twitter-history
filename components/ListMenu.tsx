@@ -1,9 +1,8 @@
 import { NextPage } from "next";
-import React, { useEffect } from "react";
-
-import { ListModal } from "./ListModal";
-
+import React from "react";
+import { IoClose } from "react-icons/io5";
 import styles from "./ListMenu.module.css";
+import { ListModal } from "./ListModal";
 
 interface Props {
   mentions: {
@@ -25,6 +24,9 @@ export const ListMenu: NextPage<Props> = ({ mentions, ownedLists }) => {
   return (
     <div className={styles.container}>
       <ul>
+        <li>Open in Twitter</li>
+        <li>Bookmark</li>
+
         {mentions?.map((mention) => (
           <li
             key={mention.id}
@@ -46,8 +48,11 @@ export const ListMenu: NextPage<Props> = ({ mentions, ownedLists }) => {
             selectedMention={selectedMention}
             ownedLists={ownedLists}
           >
-            <div>
-              <button onClick={() => setShowModal(false)}>Close Modal</button>
+            <div className={styles.listModalHeader}>
+              <h2>Lists</h2>
+              <button onClick={() => setShowModal(false)}>
+                <IoClose />
+              </button>
             </div>
           </ListModal>
         </>

@@ -55,21 +55,22 @@ export const ListModal: NextPage<Props> = ({
       <div className={styles.modal}>
         {children}
 
-        <h1>Hello from the Modal!</h1>
-        <ul>
-          {ownedLists?.slice(0, 5).map((list) => (
-            <div key={list.id}>
-              <li
-                onClick={(e) => {
-                  e.stopPropagation();
-                  addToList(selectedMention.id, list.id);
-                }}
-              >
-                {list.name}
-              </li>
-            </div>
-          ))}
-        </ul>
+        <div className={styles.main}>
+          <ul>
+            {ownedLists?.slice(0, 5).map((list) => (
+              <div key={list.id}>
+                <li
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToList(selectedMention.id, list.id);
+                  }}
+                >
+                  {list.name}
+                </li>
+              </div>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

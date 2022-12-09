@@ -101,3 +101,34 @@
   /* border: 1px solid yellow; */
   padding: 6px 4px;
 }
+
+.tweetFooterLikeIcon,
+.tweetFooterRetweetIcon,
+.tweetFooterReplyIcon {
+  margin-right: 5px;
+}
+
+.tweetFooterLikeIcon {
+  /* fill: #e0245e; */
+}
+
+
+.tweetFooterReplyIcon {
+  fill: #2b3f57;
+}
+
+.tweetFooterReply,
+.tweetFooterRetweet,
+.tweetFooterLike {
+  align-items: center;
+  display: flex;
+  color: #8899a6;
+  font-size: 0.9rem;
+}
+
+.tweetFooterReply:hover,
+.tweetFooterRetweet:hover,
+.tweetFooterLike:hover,
+.tweetMenuIcon:hover {
+  cursor: pointer;
+}

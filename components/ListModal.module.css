@@ -13,12 +13,12 @@
 .modal {
     background: white;
     padding: 2rem;
-    max-width: 400px;
+    max-width: 600px;
     width: 90%;
     border-radius: 4px;
     box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.2);
-    border: 3px solid blue;
     z-index: 9999999;
+    background-color: #222b35;
 }
 
 .closeButton {
@@ -29,4 +29,8 @@
     font-weight: bold;
     color: #ccc;
     cursor: pointer;
+}
+
+.main {
+    padding: 20px 0px;
 }
