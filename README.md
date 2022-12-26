@@ -1,34 +1,28 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Kosmik
+  Social Medias has become an integral part of modern society. Important decisions are announced through social media, debates and discussions are held here, ideas are criticized. Despite having many negeative consequesnces, it has become an important aspect of modern world. But, all of them are focused on \*now\*. It is clearly evident by Twitter's tagline "What's Happening?".  This constant pull towards getting up to date with the world events induces fear of missing out among users and are the reason why we can't stay a day without checking the Internet. This is one of the reason many consider Social Media as toxic. 
+  On the other hand, a lot of the valuable information on the conversations, discussions are lost. We can learn a lot from the past conversations and discussions held if we can filter and surface them properly.
+ 
+This constant focus toward now is not just evident on Social Medias. It is also clearly evident on discussion forums(Discord, Slack,etc.) which is really a problem because problem you are having is probably faced by someone else before. And, this the problem of engaging in same discussion again and again is faced by forums managers. And, these tools nowadays only offers hack to find content from the past.
 
-## Getting Started
+Relaizing this, I am thinking about social media which do not constantly pull you toward the current trends. 
 
-First, run the development server:
+## How it Works?
+   Kosmik is an attempt to see what such social media looks like. Kosmik is built on top of Twitter API. You can simply login with your Twitter Account and browse the past.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Features
+- can go to a particular time/period
+- create list, add people to existing list
+- like, bookmark tweet directly from app
+  
+## Challenges I ran into
+- Building on top of Twitter API is really hard and particularly for an app like this where we need to fetch past tweets. Twitter API search endpoint limits tweets you can fetch to only last 7 days. I got around this with Twitter API search user timeline endpoint which also limits the tweet you can fetch to just last 3200(which is just last year of tweets if you tweet 8 per day). This makes it really hard to build an app like Kosmik. I overcame this problem by fetching from multiple related accounts(lists). And allowing people to easily create lists.
+- I always find it hard to implement authentication. This was no exception. Implementing Oauth 2.0 was hard.
+  
+## What did I learn?
+- On the technical side, I learned a lot about Oauth2.0 authentication and authorization. I always find it difficult to implement authentication. I learned a lot while implementing this one.
+- On the overall as a project goal, I am learning a lot about how such socail media looks like. And the challenges for creating one.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+If you have any ideas or are working on similar projects. Hit me up, I'd be super excited to jam. 
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+	  Built Using Next.js
