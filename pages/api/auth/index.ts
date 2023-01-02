@@ -13,7 +13,7 @@ export default async function handler(
     clientSecret: process.env.TWITTER_CLIENT_SECRET as string,
   });
 
-  const callbackURL = process.env.TWITTER_CALLBACK_URL as string; // e.g. http://localhost:3000/api/twitter/callback
+  const callbackURL = process.env.TWITTER_CALLBACK_URL as string;
 
   const { url, codeVerifier, state } = twitterClient.generateOAuth2AuthLink(
     callbackURL,
