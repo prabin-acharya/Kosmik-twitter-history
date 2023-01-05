@@ -1,27 +1,31 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import {
-  TweetPublicMetricsV2,
   TweetV2UserTimelineParams,
   TwitterApi,
   TwitterV2IncludesHelper,
 } from "twitter-api-v2";
-
-interface User {
-  id: string;
-  name: string;
-  username: string;
-  profile_image_url?: string;
-}
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const access_Token = req.cookies.access_Token as string;
+  console.log("#############################################");
 
   if (!access_Token) {
     res.status(401).json({
       Error: " User not authenticated",
+    });
+    return;
+  }
+
+  const client = new TwitterApi(access_Token);
+
+  const listId = req.query.listId;
+
+  if (!listId) {
+    res.status(400).json({
+      Error: "List id not provided",
     });
     return;
   }
@@ -32,28 +36,31 @@ export default async function handler(
   let dateFrom = new Date(req.query.from as string);
   let dateTo = new Date(req.query.to as string);
 
-  console.log(from, to);
-
   if (!from || !to) {
     [dateFrom, dateTo] = randomDate();
   }
 
-  const client = new TwitterApi(access_Token);
+  const membersOfList = await client.v2.listMembers(listId as string);
 
-  const following = await client.v2.following((await client.v2.me()).data.id);
+  const listMembers = [];
 
-  const randomizedFollowing = shuffleArray(following.data)?.slice(0, 7);
+  for await (const user of membersOfList) {
+    listMembers.push({
+      id: user.id,
+      name: user.name,
+      username: user.username,
+    });
+  }
 
-  let members;
+  const members = listMembers.slice(0, 10);
 
-  members = randomizedFollowing || [];
+  console.log(members);
 
   const randomizedFollowingOrderedTweets = members.map(async (user) => {
     const options: Partial<TweetV2UserTimelineParams> = {
       max_results: 10,
       start_time: dateFrom.toISOString(),
       end_time: dateTo.toISOString(),
-
       "tweet.fields": [
         "id",
         "text",
@@ -72,11 +79,7 @@ export default async function handler(
       "media.fields": ["url"],
     };
 
-    const userTimeline = await (
-      await client.v2.userTimeline(user.id, options)
-    ).next();
-
-    const next_token = userTimeline.meta.next_token;
+    const userTimeline = await await client.v2.userTimeline(user.id, options);
 
     const includes = new TwitterV2IncludesHelper(userTimeline);
 
@@ -112,30 +115,6 @@ export default async function handler(
   });
 }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-// now do list
-// Steps:-
-// fetch user's list
-// fetch list timeline
-
-// and timeline of selected accounts
-// Steps:-
-// eg Karpathy, dan_abramov,
-
-// api docs say timeline can only be fetched to last 7 days or 800 mentions/rev chronological;  3200 tweets
-// but can we fetch old tweets from specific date range?
 function shuffleArray(array: any[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));

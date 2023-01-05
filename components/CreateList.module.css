@@ -1,0 +1,118 @@
+.backdrop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background: white;
+    max-width: 600px;
+    width: 90%;
+    border-radius: 20px;
+    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.2);
+    z-index: 9999999;
+    background-color: #222b35;
+}
+
+
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 20px;
+    background-color: #1a2836;
+    border-radius: 20px 20px 0px 0px;
+}
+
+.close {
+    border-radius: 50%;
+    padding: 8px;
+}
+
+.close:hover {
+    cursor: pointer;
+    background-color: rgba(93, 108, 139, 0.2);
+}
+
+.body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.body label {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.body input,
+.body textarea {
+    padding: 10px;
+    border: 1px solid rgb(111, 111, 111);
+    border-radius: 4px;
+    margin-bottom: 30px;
+    background-color: #222b35;
+    outline: none;
+    color: white;
+    font-size: 1.1rem;
+    font-family: inherit;
+}
+
+.body input:focus,
+.body textarea:focus {
+    outline: 1px solid #1da1f2;
+    border: 1px solid #1da1f2;
+}
+
+
+.private {
+    display: flex;
+    justify-content: space-between;
+}
+
+.private:hover {
+    cursor: pointer;
+}
+
+.privateCheckbox {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: white;
+}
+
+.privateCheckbox:checked {
+    background: #1da1f2;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 12'%3E%3Cpath fill='%23fff' fill-rule='evenodd' d='M6 12l-6-6 2-2 4 4 8-8 2 2-10 10z'/%3E%3C/svg%3E");
+    background-position: center;
+    background-size: 60%;
+    background-repeat: no-repeat;
+}
+
+.privateCheckbox:hover {
+    cursor: pointer;
+}
+
+.body button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #1da1f2;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+}

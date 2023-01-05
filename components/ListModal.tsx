@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 import styles from "./ListModal.module.css";
@@ -62,7 +63,7 @@ export const ListModal: NextPage<Props> = ({
                 <li
                   onClick={(e) => {
                     e.stopPropagation();
-                    addToList(selectedMention.id, list.id);
+                    // addToList(selectedMention.id, list.id);
                   }}
                 >
                   {list.name}
@@ -70,6 +71,7 @@ export const ListModal: NextPage<Props> = ({
               </div>
             ))}
           </ul>
+          <Link href="/lists/create">Create a new list</Link>
         </div>
       </div>
     </div>

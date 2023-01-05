@@ -43,7 +43,7 @@ export const UserDetail: NextPage<Props> = ({ user, authorId }) => {
       setLoading(false);
     };
 
-    fetchUserData();
+    // fetchUserData();
   }, [authorId]);
 
   if (loading || !userData)

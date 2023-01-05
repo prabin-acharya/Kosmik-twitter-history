@@ -1,44 +1,18 @@
 import { NextPage } from "next";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import {
-  AiOutlineHeart,
-  AiOutlineMessage,
-  AiOutlineRetweet,
-} from "react-icons/ai";
+import { AiOutlineHeart, AiOutlineRetweet } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
 import { MdOutlineMoreHoriz } from "react-icons/md";
 
+import { TweetType } from "../types";
 import { ListMenu } from "./ListMenu";
+import styles from "./Tweet.module.css";
 import { UserDetail } from "./UserDetail";
-
 import { formatDate } from "./utils";
 
-import Link from "next/link";
-import styles from "./Tweet.module.css";
-
 interface Props {
-  tweet: {
-    id: number;
-    text: string;
-    created_at: Date;
-    public_metrics: {
-      retweet_count: number;
-      reply_count: number;
-      like_count: number;
-      quote_count: number;
-    };
-    profile_image_url: string;
-    username: string;
-    name: string;
-    authorId: number;
-    mentions: {
-      username: string;
-      id: number;
-      start: number;
-      end: number;
-    }[];
-  };
+  tweet: TweetType;
   ownedLists: {
     id: number;
     name: string;
@@ -46,20 +20,10 @@ interface Props {
   }[];
 }
 
-interface UserDetail {
-  user: {
-    data: {
-      id: number;
-      name: string;
-      username: string;
-      description: string;
-    };
-  };
-}
-
 export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
   const [showUserPopup, setShowUserPopup] = useState<Boolean>(false);
   const [showMenu, setShowMenu] = useState<Boolean>(false);
+  const [liked, setLiked] = useState<Boolean>(false);
 
   const handleMouseEnter = async () => {
     if (!showUserPopup) {
@@ -91,8 +55,28 @@ export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
   };
 
   const closeMenu = () => {
-    console.log("=================");
     setShowMenu(false);
+  };
+
+  const likeTweet = async () => {
+    try {
+      const res = await fetch(`/api/action`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tweetId: tweet.id,
+          action: "likeTweet",
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setLiked(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -137,7 +121,12 @@ export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
             >
               <MdOutlineMoreHoriz className={styles.tweetMenuIcon} />
               {showMenu && (
-                <ListMenu mentions={tweet.mentions} ownedLists={ownedLists} />
+                <ListMenu
+                  mentions={tweet.mentions}
+                  ownedLists={ownedLists}
+                  username={tweet.username}
+                  id={tweet.id}
+                />
               )}
             </span>
             <span className={styles.tweetHeaderDate}>
@@ -147,22 +136,24 @@ export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
         </div>
         {showUserPopup && <UserDetail authorId={tweet.authorId} />}
 
-        <div className={styles.tweetBody}>
-          <p className={styles.tweetText}>{tweet.text}</p>
-        </div>
+        <div className={styles.tweetBody}>{entitiesToText(tweet)}</div>
 
         <div className={styles.tweetFooter}>
           <div className={styles.tweetFooterLike}>
-            {/* <span className={styles.tweetFooterLikeLabel}>Likes</span> */}
-            <AiOutlineHeart className={styles.tweetFooterLikeIcon} />
+            <AiOutlineHeart
+              className={
+                !liked
+                  ? styles.tweetFooterLikeIcon
+                  : styles.tweetFooterLikeIconFill
+              }
+              onClick={likeTweet}
+            />
             <span className={styles.tweetFooterLikeCount}>
               {tweet.public_metrics?.like_count}
             </span>
           </div>
 
           <div className={styles.tweetFooterRetweet}>
-            {/* <span className={styles.tweetFooterRetweetLabel}>Retweets</span>
-             */}
             <AiOutlineRetweet className={styles.tweetFooterRetweetIcon} />
             <span className={styles.tweetFooterRetweetCount}>
               {tweet.public_metrics?.retweet_count +
@@ -171,7 +162,6 @@ export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
           </div>
 
           <div className={styles.tweetFooterReply}>
-            {/* <span className={styles.tweetFooterReplyLabel}>Replies</span> */}
             <FaComment className={styles.tweetFooterReplyIcon} />
             <span className={styles.tweetFooterReplyCount}>
               {tweet.public_metrics?.reply_count}
@@ -181,4 +171,66 @@ export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
       </div>
     </div>
   );
+};
+
+const entitiesToText = (tweet: TweetType) => {
+  let mentions = tweet?.mentions?.map((mention, index) => ({
+    key: index,
+    screen_name: mention.username,
+    start: mention.start,
+    end: mention.end,
+    url: undefined,
+  }));
+
+  let links = tweet.entities?.urls?.map((url, index) => ({
+    key: index + 1000,
+    url: url.expanded_url,
+    short_url: url.display_url,
+    start: url.start,
+    end: url.end,
+    screen_name: undefined,
+  }));
+
+  if (!links) links = [];
+  if (!mentions) mentions = [];
+
+  if (!mentions && !links) {
+    return tweet.text;
+  }
+
+  const entities = [...mentions, ...links].sort((a, b) => a.start - b.start);
+
+  let currentIndex = 0;
+  const parts: (string | JSX.Element)[] = [];
+
+  for (const entity of entities) {
+    if (currentIndex < entity.start) {
+      parts.push(tweet.text.substring(currentIndex, entity.start));
+    }
+    if (entity?.screen_name) {
+      parts.push(
+        <a
+          key={entity.key}
+          href={`https://twitter.com/${entity.screen_name}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          @{entity.screen_name}
+        </a>
+      );
+    } else if (entity.url) {
+      parts.push(
+        <a key={entity.key} href={entity.url} target="_blank" rel="noreferrer">
+          {entity.short_url}
+        </a>
+      );
+    }
+    currentIndex = entity.end;
+  }
+
+  if (currentIndex < tweet.text.length) {
+    parts.push(tweet.text.substring(currentIndex));
+  }
+
+  return parts;
 };

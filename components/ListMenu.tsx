@@ -16,16 +16,41 @@ interface Props {
     name: string;
     private: Boolean;
   }[];
+  username: string;
+  id: number;
 }
 
-export const ListMenu: NextPage<Props> = ({ mentions, ownedLists }) => {
+export const ListMenu: NextPage<Props> = ({
+  mentions,
+  ownedLists,
+  username,
+  id,
+}) => {
   const [showModal, setShowModal] = React.useState(false);
   const [selectedMention, setSelectedMention] = React.useState({});
+
+  const handleBookmark = () => {};
+
   return (
     <div className={styles.container}>
       <ul>
-        <li>Open in Twitter</li>
-        <li>Bookmark</li>
+        <li
+          onClick={() => {
+            window.open(
+              `https://twitter.com/${username}/status/${id}`,
+              "_blank"
+            );
+          }}
+        >
+          Open in Twitter
+        </li>
+        <li
+          onClick={() => {
+            handleBookmark;
+          }}
+        >
+          Bookmark
+        </li>
 
         {mentions?.map((mention) => (
           <li
@@ -50,9 +75,23 @@ export const ListMenu: NextPage<Props> = ({ mentions, ownedLists }) => {
           >
             <div className={styles.listModalHeader}>
               <h2>Lists</h2>
-              <button onClick={() => setShowModal(false)}>
-                <IoClose />
-              </button>
+              <div
+                className={styles.close}
+                onClick={() => {
+                  setShowModal(false);
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </div>
             </div>
           </ListModal>
         </>

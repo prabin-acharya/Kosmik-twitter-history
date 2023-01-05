@@ -1,5 +1,9 @@
 .tweet {
-  width: 50%;
+  /* width: 50%; */
+  /* width: 100%; */
+  max-width: 600px;
+  /* min-width: 440px; */
+  width: 100%;
   padding: 20px;
   border: 1px solid grey;
   border-radius: 10px;
@@ -10,6 +14,7 @@
   line-height: 1.5;
   letter-spacing: 0.01071em;
   display: inline-block;
+  overflow: hidden;
 }
 
 .tweetHeader {
@@ -103,13 +108,16 @@
 }
 
 .tweetFooterLikeIcon,
+.tweetFooterLikeIconFill,
 .tweetFooterRetweetIcon,
 .tweetFooterReplyIcon {
   margin-right: 5px;
 }
 
-.tweetFooterLikeIcon {
-  /* fill: #e0245e; */
+
+
+.tweetFooterLikeIconFill {
+  fill: #e0245e;
 }
 
 
@@ -131,4 +139,10 @@
 .tweetFooterLike:hover,
 .tweetMenuIcon:hover {
   cursor: pointer;
+}
+
+
+.tweetBody a {
+  color: #1da1f2;
+  text-decoration: none;
 }

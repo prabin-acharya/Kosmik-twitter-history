@@ -40,7 +40,7 @@ const TweetId: NextPage = () => {
       setLoading(false);
     };
 
-    tweetId && fetchTweet();
+    // tweetId && fetchTweet();
   }, [tweetId]);
 
   if (loading) {
