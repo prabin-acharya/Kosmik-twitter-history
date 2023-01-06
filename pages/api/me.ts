@@ -41,7 +41,7 @@ export default async function handler(
     "user.fields": ["id", "name", "username", "profile_image_url"],
   });
 
-  const followedLists = await refreshedClient.v2.listFollowed(
+  const followedListsPaginator = await refreshedClient.v2.listFollowed(
     (
       await refreshedClient.v2.me()
     ).data.id,
@@ -57,12 +57,12 @@ export default async function handler(
     }
   );
 
-  const lists = [];
-  const includes = new TwitterV2IncludesHelper(followedLists);
+  const followedLists = [];
+  const includes = new TwitterV2IncludesHelper(followedListsPaginator);
 
-  for await (const list of followedLists) {
+  for await (const list of followedListsPaginator) {
     const owner = includes.listOwner(list);
-    lists.push({
+    followedLists.push({
       id: list.id,
       name: list.name,
       description: list.description,
@@ -74,19 +74,44 @@ export default async function handler(
         username: owner?.username,
         profile_image_url: owner?.profile_image_url,
       },
+      private: false,
     });
   }
 
-  const userOwnedLists = await refreshedClient.v2.listsOwned(user.data.id, {
-    max_results: 100,
-    "list.fields": ["private"],
+  const ownedListsPaginator = await refreshedClient.v2.listsOwned(
+    user.data.id,
+    {
+      max_results: 100,
+      "list.fields": [
+        "private",
+        "created_at",
+        "description",
+        "member_count",
+        "follower_count",
+      ],
+    }
+  );
+
+  const ownedLists = ownedListsPaginator.data.data.map((list) => {
+    return {
+      id: list.id,
+      name: list.name,
+      description: list.description,
+      member_count: list.member_count,
+      follower_count: list.follower_count,
+      created_at: list.created_at,
+      private: list.private,
+      owner: {
+        id: user.data.id,
+        name: user.data.name,
+        username: user.data.username,
+        profile_image_url: user.data.profile_image_url,
+      },
+    };
   });
 
   res.status(201).json({
     user,
-    lists: {
-      ownedLists: userOwnedLists.data.data,
-      followedLists: lists,
-    },
+    lists: [...ownedLists, ...followedLists],
   });
 }

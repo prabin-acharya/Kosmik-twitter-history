@@ -52,7 +52,7 @@ export type TweetType = {
   };
 };
 
-export type List = {
+export type ListType = {
   id: number;
   name: string;
   description: string;
@@ -60,21 +60,4 @@ export type List = {
   follower_count: number;
   owner: User;
   private: false;
-};
-
-export type Lists = {
-  ownedLists: {
-    id: number;
-    name: string;
-    private: Boolean;
-  }[];
-  followedLists: {
-    id: number;
-    name: string;
-    description: string;
-    member_count: number;
-    follower_count: number;
-    owner: User;
-    private: false;
-  }[];
 };

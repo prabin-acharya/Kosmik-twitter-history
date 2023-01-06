@@ -3,11 +3,12 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 
-import Link from "next/link";
 import Router, { useRouter } from "next/router";
 import { CreateList } from "../components/CreateList";
 import { Spinner } from "../components/Spinner";
 import { Tweet } from "../components/Tweet";
+
+import { ListType, TweetType, User } from "../types";
 
 // server side props
 export async function getServerSideProps(context: any) {
@@ -20,104 +21,14 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-interface Tweet {
-  id: number;
-  text: string;
-  created_at: Date;
-  public_metrics: {
-    retweet_count: number;
-    reply_count: number;
-    like_count: number;
-    quote_count: number;
-  };
-  profile_image_url: string;
-  username: string;
-  name: string;
-  authorId: number;
-  mentions: {
-    username: string;
-    id: number;
-    start: number;
-    end: number;
-  }[];
-  entities: {
-    urls: {
-      url: string;
-      start: number;
-      end: number;
-      expanded_url: string;
-      display_url: string;
-    }[];
-
-    hashtags: {
-      tag: string;
-      start: number;
-      end: number;
-    }[];
-
-    mentions: {
-      username: string;
-      id: number;
-      start: number;
-      end: number;
-    }[];
-
-    annotations: {
-      start: number;
-      end: number;
-      probability: number;
-      type: string;
-      normalized_text: string;
-    }[];
-
-    media: {
-      start: number;
-      end: number;
-      type: string;
-      url: string;
-      preview_image_url: string;
-    }[];
-  };
-}
-
-export interface User {
-  id: number;
-  name: string;
-  username: string;
-  profile_image_url?: string;
-}
-
-//
-
-interface List {
-  ownedLists: {
-    id: number;
-    name: string;
-    private: Boolean;
-  }[];
-  followedLists: {
-    id: number;
-    name: string;
-    description: string;
-    members_count: number;
-    followers_count: number;
-    owner: User;
-    private: false;
-  }[];
-}
-
 interface Props {
-  cookies: any;
-  hamro: string;
-  lists: List;
-  handleListsChange: (
-    ownedLists: List["ownedLists"],
-    followedLists: List["followedLists"]
-  ) => void;
+  user: User;
+  lists: ListType[];
+  handleListsChange: (updatedLists: ListType[]) => void;
 }
 
-const Home: NextPage<Props> = ({ lists, handleListsChange }) => {
-  const [userTimeline, setUserTimeline] = useState<Tweet[]>();
+const Home: NextPage<Props> = ({ user, lists, handleListsChange }) => {
+  const [userTimeline, setUserTimeline] = useState<TweetType[]>();
   const [timelineLoading, setTimelineLoading] = useState(true);
 
   const router = useRouter();
@@ -137,12 +48,13 @@ const Home: NextPage<Props> = ({ lists, handleListsChange }) => {
       const data = await res.json();
       setUserTimeline(data.tweets);
       setTimelineLoading(false);
-      console.log(data);
     };
 
-    fetchHome(url);
-  }, [router.query]);
+    if (router.pathname !== "/lists/create") fetchHome(url);
+  }, [router.query.from, router.query.to, router.pathname]);
 
+  const ownedLists = lists.filter((list) => list.owner.id === user.id);
+  const followedLists = lists.filter((list) => list.owner.id !== user.id);
   return (
     <div className={styles.container}>
       {timelineLoading ? (
@@ -158,10 +70,7 @@ const Home: NextPage<Props> = ({ lists, handleListsChange }) => {
               key={tweet.id}
               // onClick={() => router.push(`/tweet/${tweet.id}`)}
             >
-              <Tweet
-                tweet={tweet}
-                ownedLists={lists && lists.ownedLists ? lists?.ownedLists : []}
-              />
+              <Tweet tweet={tweet} ownedLists={ownedLists} />
             </div>
           ))}
         </div>

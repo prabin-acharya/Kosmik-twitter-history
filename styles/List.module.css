@@ -70,3 +70,68 @@
 .listTimeline {
     padding: 3rem 3rem;
 }
+
+.followButton,
+.unFollowButton {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.unFollowButton {
+    background-color: #1b222a;
+    color: white;
+}
+
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background: white;
+    padding: 2rem;
+    max-width: 600px;
+    width: 90%;
+    border-radius: 4px;
+    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.2);
+    z-index: 9999999;
+    background-color: #222b35;
+}
+
+.closeButton {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.main {
+    padding: 20px 0px;
+}
+
+.modal img {
+    border-radius: 50%;
+    margin: 4px;
+    margin-right: 10px;
+}
+
+.modal li {
+    list-style-type: none;
+    padding: 0px;
+    display: flex;
+    align-items: center;
+}

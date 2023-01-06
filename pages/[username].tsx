@@ -3,39 +3,23 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Spinner } from "../components/Spinner";
+import { ListType, User } from "../types";
 import styles from "./../styles/username.module.css";
 
-export interface User {
-  id: number;
-  name: string;
-  username: string;
-  description: string;
-  profile_image_url: string;
+interface Props {
+  lists: ListType[];
+  handleListsChange: (updatedLists: ListType[]) => void;
 }
 
-interface Lists {
-  ownedLists: {
-    id: number;
-    name: string;
-    private: Boolean;
-  }[];
-  followedLists: {
-    id: number;
-    name: string;
-    description: string;
-    members_count: number;
-    followers_count: number;
-    owner: User;
-    private: false;
-  }[];
-}
-
-export const Profile: NextPage = () => {
+export const Profile: NextPage<Props> = ({
+  lists: usersLists,
+  handleListsChange,
+}) => {
   const router = useRouter();
   const { username } = router.query;
 
   const [user, setUser] = useState<User>();
-  const [lists, setLists] = useState<Lists>();
+  const [lists, setLists] = useState<ListType[]>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,9 +35,40 @@ export const Profile: NextPage = () => {
     }
   }, [username]);
 
+  const actionList = async (list: ListType, action: string) => {
+    try {
+      const res = await fetch(`/api/action`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          listId: list.id,
+          action,
+        }),
+      });
+      const data = await res.json();
+      if (list) {
+        const updatedLists =
+          action === "followList"
+            ? [...usersLists, list]
+            : usersLists.filter((l) => l.id !== list.id);
+        handleListsChange(updatedLists);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (!user) {
     return <Spinner />;
   }
+
+  const ownedLists = lists?.filter((list) => list.owner.id === user.id) || [];
+  const followedLists =
+    lists?.filter((list) => list.owner.id !== user.id) || [];
+
+  const usersListsIds = usersLists.map((list) => list.id);
 
   return (
     <div className={styles.container}>
@@ -71,19 +86,25 @@ export const Profile: NextPage = () => {
       <hr />
 
       <div className={styles.lists}>
-        {lists?.ownedLists.length === 0 && lists?.followedLists.length === 0 ? (
+        {ownedLists.length === 0 && followedLists.length === 0 ? (
           <span>@{username} do not own or follow any lists.</span>
         ) : (
           <>
             <h2>Lists</h2>
 
-            {lists && lists?.ownedLists?.length > 0 && <h3>Owned Lists</h3>}
+            {ownedLists.length > 0 && <h3>Owned Lists</h3>}
 
             <ul>
-              {lists?.ownedLists.map((list) => (
+              {ownedLists.map((list) => (
                 <li key={list.id} className={styles.list}>
                   <div>
-                    <h4> {list.name}</h4>
+                    <h4
+                      onClick={() => {
+                        router.push(`/lists/${list.id}`);
+                      }}
+                    >
+                      {list.name}
+                    </h4>
                     <div className={styles.owner}>
                       <Image
                         src={user.profile_image_url}
@@ -94,20 +115,43 @@ export const Profile: NextPage = () => {
                       <span>{user.name}</span>
                     </div>
                   </div>
-                  <button>Follow</button>
+
+                  {usersListsIds.includes(list.id) ? (
+                    <button
+                      className={styles.unFollowButton}
+                      onClick={() => {
+                        actionList(list, "unFollowList");
+                      }}
+                    >
+                      Unfollow
+                    </button>
+                  ) : (
+                    <button
+                      className={styles.followButton}
+                      onClick={() => {
+                        actionList(list, "followList");
+                      }}
+                    >
+                      Follow
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>
 
-            {lists && lists?.followedLists?.length > 0 && (
-              <h3>Followed Lists</h3>
-            )}
+            {followedLists.length > 0 && <h3>Followed Lists</h3>}
 
             <ul>
-              {lists?.followedLists.map((list) => (
+              {followedLists.map((list) => (
                 <li key={list.id} className={styles.list}>
                   <div>
-                    <h4>{list.name}</h4>
+                    <h4
+                      onClick={() => {
+                        router.push(`/lists/${list.id}`);
+                      }}
+                    >
+                      {list.name}
+                    </h4>
                     <div className={styles.owner}>
                       <Image
                         src={list.owner.profile_image_url}
@@ -122,7 +166,25 @@ export const Profile: NextPage = () => {
                       </div>
                     </div>
                   </div>
-                  <button>Follow</button>
+                  {usersListsIds.includes(list.id) ? (
+                    <button
+                      className={styles.unFollowButton}
+                      onClick={() => {
+                        actionList(list, "unFollowList");
+                      }}
+                    >
+                      Unfollow
+                    </button>
+                  ) : (
+                    <button
+                      className={styles.followButton}
+                      onClick={() => {
+                        actionList(list, "followList");
+                      }}
+                    >
+                      Follow
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>

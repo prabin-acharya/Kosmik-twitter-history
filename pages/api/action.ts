@@ -74,6 +74,14 @@ export default async function handler(
       );
       break;
 
+    case "unFollowList":
+      console.log("unfollowList");
+      response = await refreshedClient.v2.unsubscribeOfList(
+        userId,
+        req.body.listId
+      );
+      break;
+
     default:
       console.log("default");
       break;

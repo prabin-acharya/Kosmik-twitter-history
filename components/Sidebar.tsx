@@ -4,37 +4,15 @@ import Link from "next/link";
 import router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
+import { ListType, User } from "../types";
 
 interface Props {
   user: User;
-  lists: List;
+  lists: ListType[];
+  closeSidebar: () => void;
 }
 
-export interface User {
-  id: number;
-  name: string;
-  username: string;
-  profile_image_url?: string;
-}
-
-interface List {
-  ownedLists: {
-    id: number;
-    name: string;
-    private: Boolean;
-  }[];
-  followedLists: {
-    id: number;
-    name: string;
-    description: string;
-    member_count: number;
-    follower_count: number;
-    owner: User;
-    private: false;
-  }[];
-}
-
-export const Sidebar: NextPage<Props> = ({ user, lists }) => {
+export const Sidebar: NextPage<Props> = ({ user, lists, closeSidebar }) => {
   const [date, setDate] = useState<{
     from: string;
     to: string;
@@ -63,7 +41,10 @@ export const Sidebar: NextPage<Props> = ({ user, lists }) => {
     // if (createList) setShowModal(true);
   }, [router.query]);
 
-  //   console.log(showSidebar, "sidebar");
+  console.log(lists, "$$$");
+  const ownedLists = lists.filter((list) => list.owner.id === user.id);
+  const followedLists = lists.filter((list) => list.owner.id !== user.id);
+
   return (
     <>
       {/* <div className={showSidebar ? styles.sidebar : styles.closedSidebar}> */}
@@ -94,7 +75,8 @@ export const Sidebar: NextPage<Props> = ({ user, lists }) => {
           <div
             className={styles.close}
             onClick={() => {
-              //   setShowSidebar(false);
+              // setShowSidebar(false);
+              closeSidebar();
             }}
           >
             <svg
@@ -146,7 +128,7 @@ export const Sidebar: NextPage<Props> = ({ user, lists }) => {
 
           <h5>Followed</h5>
           <ul>
-            {lists?.followedLists?.slice(0, 10)?.map((list) => (
+            {followedLists?.slice(0, 10)?.map((list) => (
               <li
                 key={list.id}
                 onClick={() => {
@@ -166,7 +148,7 @@ export const Sidebar: NextPage<Props> = ({ user, lists }) => {
           </ul>
           <h5>Owned</h5>
           <ul>
-            {lists?.ownedLists?.slice(0, 5)?.map((list) => (
+            {ownedLists?.slice(0, 5)?.map((list) => (
               <li
                 key={list.id}
                 onClick={() => {
@@ -185,6 +167,8 @@ export const Sidebar: NextPage<Props> = ({ user, lists }) => {
           >
             Create a new list
           </Link>
+          <br />
+          <Link href={`/lists/discover`}>Discover new Lists</Link>
         </div>
       </div>
     </>

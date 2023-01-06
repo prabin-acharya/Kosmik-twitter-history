@@ -37,9 +37,33 @@ export default async function handler(
     ],
   });
 
-  const ownedLists = await refreshedClient.v2.listsOwned(userId, {
+  const ownedListsPaginator = await refreshedClient.v2.listsOwned(userId, {
     max_results: 100,
-    "list.fields": ["private"],
+    "list.fields": [
+      "private",
+      "created_at",
+      "description",
+      "member_count",
+      "follower_count",
+    ],
+  });
+
+  const ownedLists = ownedListsPaginator.data.data.map((list) => {
+    return {
+      id: list.id,
+      name: list.name,
+      description: list.description,
+      member_count: list.member_count,
+      follower_count: list.follower_count,
+      created_at: list.created_at,
+      private: list.private,
+      owner: {
+        id: user.data.id,
+        name: user.data.name,
+        username: user.data.username,
+        profile_image_url: user.data.profile_image_url,
+      },
+    };
   });
 
   const followedListsPaginator = await refreshedClient.v2.listFollowed(userId, {
@@ -70,14 +94,14 @@ export default async function handler(
         username: owner?.username,
         profile_image_url: owner?.profile_image_url,
       },
+      private: false,
     });
   }
 
+  console.log(ownedLists, "&&&&&");
+
   res.status(200).json({
     user: user,
-    lists: {
-      followedLists,
-      ownedLists: ownedLists.data.data || [],
-    },
+    lists: [...ownedLists, ...followedLists],
   });
 }

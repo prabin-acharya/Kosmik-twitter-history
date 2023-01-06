@@ -12,6 +12,11 @@ const nextConfig = {
         destination: "/?createList=true",
         permanent: true,
       },
+      {
+        source: "/lists/:listId/members",
+        destination: "/lists/:listId/?showMembers=true",
+        permanent: true,
+      },
     ];
   },
 };
