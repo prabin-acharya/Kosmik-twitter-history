@@ -26,7 +26,13 @@ export default async function handler(
   }
 
   const members = await refreshedClient.v2.listMembers(listId as string, {
-    "user.fields": ["id", "name", "username", "profile_image_url"],
+    "user.fields": [
+      "id",
+      "name",
+      "username",
+      "profile_image_url",
+      "description",
+    ],
   });
 
   res.status(200).json({

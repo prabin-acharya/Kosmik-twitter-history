@@ -56,7 +56,7 @@ const Home: NextPage<Props> = ({ user, lists, handleListsChange }) => {
   const ownedLists = lists.filter((list) => list.owner.id === user.id);
   const followedLists = lists.filter((list) => list.owner.id !== user.id);
   return (
-    <div className={styles.container}>
+    <div className={styles.tweetsContainer}>
       {timelineLoading ? (
         <div className={styles.tweetContainer}>
           <div className={styles.loading}>

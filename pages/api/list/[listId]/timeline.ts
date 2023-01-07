@@ -10,7 +10,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const access_Token = req.cookies.access_Token as string;
-  console.log("#############################################");
+  console.log("+++++++++");
 
   if (!access_Token) {
     res.status(401).json({
@@ -18,8 +18,6 @@ export default async function handler(
     });
     return;
   }
-
-  const client = new TwitterApi(access_Token);
 
   const listId = req.query.listId;
 
@@ -30,19 +28,17 @@ export default async function handler(
     return;
   }
 
-  const from = req.query.from as string;
-  const to = req.query.to as string;
+  const client = new TwitterApi(access_Token);
 
-  let dateFrom = new Date(req.query.from as string);
-  let dateTo = new Date(req.query.to as string);
+  let from = new Date((req.query.from as string) || "2011-01-01");
+  let to = new Date((req.query.to as string) || "2021-01-01");
 
-  if (!from || !to) {
-    [dateFrom, dateTo] = randomDate();
-  }
+  const intervalTime = to.getTime() - from.getTime();
+  const interval = intervalTime / 6;
 
   const membersOfList = await client.v2.listMembers(listId as string);
 
-  const listMembers = [];
+  const listMembers: { id: string; name: string; username: string }[] = [];
 
   for await (const user of membersOfList) {
     listMembers.push({
@@ -52,66 +48,84 @@ export default async function handler(
     });
   }
 
-  const members = listMembers.slice(0, 10);
+  let listTweets: string | any[] = [];
 
-  console.log(members);
+  let i = 0;
 
-  const randomizedFollowingOrderedTweets = members.map(async (user) => {
-    const options: Partial<TweetV2UserTimelineParams> = {
-      max_results: 10,
-      start_time: dateFrom.toISOString(),
-      end_time: dateTo.toISOString(),
-      "tweet.fields": [
-        "id",
-        "text",
-        "created_at",
-        "public_metrics",
-        "source",
-        "entities",
-      ],
-      "user.fields": ["id", "name", "public_metrics", "profile_image_url"],
-      expansions: [
-        "author_id",
-        "entities.mentions.username",
-        "referenced_tweets.id",
-        "in_reply_to_user_id",
-      ],
-      "media.fields": ["url"],
-    };
+  while (listTweets.length < 20 || i < 6) {
+    const dateFrom = new Date(from.getTime() + i * interval);
+    const dateTo = new Date(from.getTime() + (i + 1) * interval);
 
-    const userTimeline = await await client.v2.userTimeline(user.id, options);
+    const newTweets = await getTweetsTimeline(dateFrom, dateTo);
+    listTweets = [...listTweets, ...newTweets];
+    i++;
+  }
 
-    const includes = new TwitterV2IncludesHelper(userTimeline);
+  async function getTweetsTimeline(dateFrom: Date, dateTo: Date) {
+    const members = shuffleArray(listMembers).slice(0, 5);
 
-    const tweets = [];
+    const randomizedFollowingOrderedTweets = members.map(async (user) => {
+      const options: Partial<TweetV2UserTimelineParams> = {
+        max_results: 10,
+        start_time: dateFrom.toISOString(),
+        end_time: dateTo.toISOString(),
+        exclude: "replies",
+        "tweet.fields": [
+          "id",
+          "text",
+          "created_at",
+          "public_metrics",
+          "source",
+          "entities",
+        ],
+        "user.fields": ["id", "name", "public_metrics", "profile_image_url"],
+        expansions: [
+          "author_id",
+          "entities.mentions.username",
+          "referenced_tweets.id",
+          "in_reply_to_user_id",
+        ],
+        "media.fields": ["url"],
+      };
 
-    for (const tweet of userTimeline.tweets) {
-      const user = includes.author(tweet);
-      tweets.push({
-        id: tweet.id,
-        text: tweet.text,
-        created_at: tweet.created_at,
-        public_metrics: tweet.public_metrics,
-        profile_image_url: user?.profile_image_url,
-        username: user?.username,
-        name: user?.name,
-        authorId: user?.id,
-        entities: tweet.entities,
-        mentions: tweet.entities?.mentions,
-      });
-    }
+      const userTimeline = await client.v2.userTimeline(user.id, options);
 
-    return tweets;
-  });
+      const includes = new TwitterV2IncludesHelper(userTimeline);
 
-  const UsersTweets = await Promise.all(randomizedFollowingOrderedTweets);
+      const tweets = [];
 
-  const tweets = UsersTweets.flat();
+      for (const tweet of userTimeline.tweets) {
+        const user = includes.author(tweet);
+        tweets.push({
+          id: tweet.id,
+          text: tweet.text,
+          created_at: tweet.created_at,
+          public_metrics: tweet.public_metrics,
+          profile_image_url: user?.profile_image_url,
+          username: user?.username,
+          name: user?.name,
+          authorId: user?.id,
+          entities: tweet.entities,
+          mentions: tweet.entities?.mentions,
+        });
+      }
 
-  const shuffledTweets = shuffleArray(tweets);
+      return tweets;
+    });
+
+    const UsersTweets = await Promise.all(randomizedFollowingOrderedTweets);
+
+    return UsersTweets.flat();
+  }
+
+  const shuffledTweets = shuffleArray(listTweets);
+
+  const uniqueTweets = shuffledTweets.filter(
+    (tweet, index, self) => index === self.findIndex((t) => t.id === tweet.id)
+  );
 
   res.status(201).json({
-    tweets: shuffledTweets,
+    tweets: uniqueTweets,
   });
 }
 

@@ -3,33 +3,17 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
-
 .sidebar {
   margin: 0;
   padding: 0;
-  /* width: 400px; */
+  width: 400px;
   max-width: 600px;
-
   position: fixed;
   height: 100%;
   padding: 1rem;
-  /* background-color: #161c23; */
-  background-color: pink;
-}
-
-.closedSidebar {
-  display: block;
-  margin: 0;
-  padding: 0;
-  /* width: 400px; */
-  max-width: 600px;
-
-  position: fixed;
-  overflow: auto;
-  padding: 1rem;
-  background-color: #161c23;
-  /* background-color: lightblue; */
-  height: 100%;
+  background-color: #0e243f;
+  /* background-color: #4d81c5 ; */
+  background-color: #222b35;
 }
 
 .main {
@@ -41,20 +25,29 @@
   border-left: 2px solid grey;
   border-right: 2px solid grey;
   box-sizing: content-box;
-  /* box-sizing: border-box; */
   overflow: hidden;
+  /* position: relative; */
+  z-index: 11;
 }
 
 .mainHeader {
   position: fixed;
+  /* position: absolute; */
+  top: 0;
   width: inherit;
+  width: 100%;
   background-color: #222b35;
   padding: 14px 20px;
   border-bottom: 1px solid black;
   box-shadow: 0 0 5px -5px #444549;
-  top: 0;
-  position: sticky;
   display: flex;
+  z-index: 18;
+}
+
+.tweetsContainer {
+  padding: 0 0rem;
+  font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid pink;
 }
 
 
@@ -65,8 +58,6 @@
   padding: 5px 14px;
   display: inline-block;
 }
-
-
 
 .mainHeader img:hover {
   cursor: pointer;
@@ -89,14 +80,10 @@
   cursor: pointer;
 }
 
-
-
 .close {
-  /* display: none; */
   border-radius: 50%;
   align-items: center;
   justify-content: center;
-  /* padding: 8px; */
 }
 
 .close:hover {
@@ -108,50 +95,19 @@
 .mainHeader img {
   border-radius: 50%;
   border: 1px solid green;
-  display: none;
 }
 
 
-@media screen and (min-width: 920px) {
-  .closedSidebar {
-    display: block;
-  }
-
-
-  /* .sidebar {
-    display: block;
-  } */
-
-
-}
-
-@media screen and (max-width: 920px) {
-  .sidebar {
-    position: fixed;
-    margin: auto;
-    z-index: 999;
-    box-shadow: 0 0 5px -5px #444549;
-    display: none;
-  }
-
-  .header button {
-    display: block;
-  }
-
+@media screen and (max-width: 720px) {
   .main {
     margin: auto;
     margin-left: 0px;
   }
 
-  .mainHeader img {
-    display: block;
-  }
-
-  .close {
-    display: none;
+  .mainHeader {
+    position: relative;
   }
 }
-
 
 
 .search h4,
@@ -241,23 +197,18 @@
   border-radius: 3px;
 }
 
-/* hover */
 .sidebar ul li:hover {
   cursor: pointer;
 }
 
-
-
 .lists .name {
   font-size: 1rem;
   font-weight: 600;
-  /* display: block; */
 }
 
 .lists .ownerName {
   font-size: 0.8rem;
   font-weight: 400;
-  /* display: block; */
   padding-left: 10px;
 }
 

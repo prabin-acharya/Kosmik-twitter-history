@@ -48,23 +48,24 @@ export default async function handler(
     ],
   });
 
-  const ownedLists = ownedListsPaginator.data.data.map((list) => {
-    return {
-      id: list.id,
-      name: list.name,
-      description: list.description,
-      member_count: list.member_count,
-      follower_count: list.follower_count,
-      created_at: list.created_at,
-      private: list.private,
-      owner: {
-        id: user.data.id,
-        name: user.data.name,
-        username: user.data.username,
-        profile_image_url: user.data.profile_image_url,
-      },
-    };
-  });
+  const ownedLists =
+    ownedListsPaginator.data.data?.map((list) => {
+      return {
+        id: list.id,
+        name: list.name,
+        description: list.description,
+        member_count: list.member_count,
+        follower_count: list.follower_count,
+        created_at: list.created_at,
+        private: list.private,
+        owner: {
+          id: user.data.id,
+          name: user.data.name,
+          username: user.data.username,
+          profile_image_url: user.data.profile_image_url,
+        },
+      };
+    }) || [];
 
   const followedListsPaginator = await refreshedClient.v2.listFollowed(userId, {
     expansions: ["owner_id"],
@@ -97,8 +98,6 @@ export default async function handler(
       private: false,
     });
   }
-
-  console.log(ownedLists, "&&&&&");
 
   res.status(200).json({
     user: user,

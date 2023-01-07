@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Spinner } from "../../components/Spinner";
 import { Tweet } from "../../components/Tweet";
@@ -87,6 +87,10 @@ export const ListPage: NextPage<Props> = ({
     };
   }, [showModal]);
 
+  function closeModal() {
+    setShowModal(false);
+  }
+
   if (!listId || !list) {
     return <Spinner />;
   }
@@ -112,7 +116,7 @@ export const ListPage: NextPage<Props> = ({
         </div>
         {list.description && <p>{list.description}Hello world!</p>}
         <div className={styles.metrics}>
-          <span>
+          <span className={styles.memberCount}>
             <b
               onClick={() => {
                 setShowModal(true);
@@ -162,15 +166,7 @@ export const ListPage: NextPage<Props> = ({
         </div>
       )}
       {showModal && (
-        <MembersModal listId={listId}>
-          <button
-            onClick={() => {
-              setShowModal(false);
-            }}
-          >
-            close
-          </button>
-        </MembersModal>
+        <MembersModal listId={listId as string} closeModal={closeModal} />
       )}
     </div>
   );
@@ -179,12 +175,12 @@ export const ListPage: NextPage<Props> = ({
 export default ListPage;
 
 interface MembersModalProps {
-  children: React.ReactNode;
   listId: string;
+  closeModal: () => void;
 }
 
-const MembersModal: NextPage<MembersModalProps> = ({ children, listId }) => {
-  const [members, setMembers] = useState<User[]>([]);
+const MembersModal: NextPage<MembersModalProps> = ({ listId, closeModal }) => {
+  const [members, setMembers] = useState<User[]>();
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch(`/api/list/${listId}/members`);
@@ -199,26 +195,56 @@ const MembersModal: NextPage<MembersModalProps> = ({ children, listId }) => {
   return (
     <div className={styles.backdrop}>
       <div className={styles.modal}>
-        {children}
-
-        <div className={styles.main}>
-          <ul>
-            {members.map((member) => (
-              <li key={member.id}>
-                <Image
-                  src={member.profile_image_url}
-                  alt="Picture of the author"
-                  width={50}
-                  height={50}
-                />
-                <span>
-                  <b>{member.name}</b>
-                </span>
-                <span className={styles.subtext}>@{member.username}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {!members ? (
+          <Spinner />
+        ) : (
+          <>
+            <div className={styles.modalHeader}>
+              <h1>Members</h1>
+              <span
+                className={styles.closeModal}
+                onClick={() => {
+                  closeModal();
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </span>
+            </div>
+            <div className={styles.main}>
+              <ul>
+                {members?.map((member) => (
+                  <li
+                    key={member.id}
+                    onClick={() => router.push(`/${member.username}`)}
+                  >
+                    <Image
+                      src={member.profile_image_url}
+                      alt="Picture of the author"
+                      width={50}
+                      height={50}
+                    />
+                    <div className={styles.memberInfo}>
+                      <span>
+                        <b>{member.name}</b>
+                      </span>
+                      <span className={styles.subtext}>@{member.username}</span>
+                      <span>{member.description}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

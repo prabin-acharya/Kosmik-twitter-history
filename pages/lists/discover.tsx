@@ -1,6 +1,9 @@
 import { NextPage } from "next";
+import Image from "next/image";
+import router from "next/router";
 import { useEffect, useState } from "react";
 import { ListType, User } from "../../types";
+import styles from "./../../styles/discover.module.css";
 
 interface Props {
   user: User;
@@ -13,8 +16,9 @@ export const Discover: NextPage<Props> = ({
   lists: usersLists,
   handleListsChange,
 }) => {
-  console.log(user, "###");
   const [lists, setLists] = useState<ListType[]>();
+
+  const usersListsIds = usersLists.map((list) => list.id);
 
   useEffect(() => {
     const followedLists = usersLists.filter(
@@ -32,19 +36,17 @@ export const Discover: NextPage<Props> = ({
           return data;
         })
       );
-      console.log("#######################", res);
+      console.log(res, "&&&&&");
       const flatLists = res.map((user) => user.lists).flat();
-      const suggLists = flatLists.filter((list) => usersLists.includes(list));
-
-      // const suggLists = flatLists.filter(list=>
-
-      // javacript check if item is in array
-
+      const suggLists = flatLists.filter(
+        (list) => !usersListsIds.includes(list.id)
+      );
+      console.log(suggLists, "suggLists");
       setLists(suggLists);
     };
 
     fetchSuggLists();
-  }, [usersLists, user]);
+  }, [user.id, usersLists, usersListsIds]);
 
   const followList = async (list: ListType) => {
     try {
@@ -68,25 +70,44 @@ export const Discover: NextPage<Props> = ({
     }
   };
 
+  console.log(lists);
+
   return (
     <div>
-      <h1>Discover</h1>
-      {lists?.map((list) => (
-        <div key={list.id}>
-          <h2>{list.name}</h2>
-          <p>{list.description}</p>
+      <h1>Discover Lists</h1>
+      <ul>
+        {lists?.map((list) => (
+          <li key={list.id} className={styles.list}>
+            <div>
+              <h4
+                onClick={() => {
+                  router.push(`/lists/${list.id}`);
+                }}
+              >
+                {list.name}
+              </h4>
+              <div className={styles.owner}>
+                <Image
+                  src={user.profile_image_url}
+                  alt={`${user.name} profile image`}
+                  width={16}
+                  height={16}
+                />
+                <span>{user.name}</span>
+              </div>
+            </div>
 
-          <button
-            onClick={() => {
-              followList(list);
-            }}
-          >
-            Follow
-          </button>
-
-          <hr />
-        </div>
-      ))}
+            <button
+              className={styles.followButton}
+              onClick={() => {
+                followList(list);
+              }}
+            >
+              Follow
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

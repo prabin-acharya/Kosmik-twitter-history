@@ -20,6 +20,18 @@ export const Layout: NextPage<Props> = ({ children, user, lists }) => {
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
+  const handleResize = () => {
+    if (window.innerWidth < 720) {
+      setShowSidebar(false);
+    } else {
+      setShowSidebar(true);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+  });
+
   useEffect(() => {
     if (router.query.createList) setShowModal(true);
   }, [router]);
@@ -44,7 +56,7 @@ export const Layout: NextPage<Props> = ({ children, user, lists }) => {
 
       <div className={styles.main}>
         <div className={styles.mainHeader}>
-          {user && (
+          {user && !showSidebar && (
             <Image
               src={user?.profile_image_url as string}
               width={30}

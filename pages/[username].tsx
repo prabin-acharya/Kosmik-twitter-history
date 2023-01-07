@@ -82,6 +82,7 @@ export const Profile: NextPage<Props> = ({
         <h1>{user.name}</h1>
         <h2>@{user.username}</h2>
         <span>{user.description}</span>
+        <button>Follow</button>
       </div>
       <hr />
 

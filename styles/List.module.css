@@ -100,38 +100,87 @@
 
 .modal {
     background: white;
-    padding: 2rem;
     max-width: 600px;
     width: 90%;
     border-radius: 4px;
     box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.2);
     z-index: 9999999;
     background-color: #222b35;
+    border: 1px solid blue;
 }
 
-.closeButton {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    font-size: 2rem;
-    font-weight: bold;
-    color: #ccc;
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid grey;
+}
+
+.closeModal {
+    border: none;
+    background-color: #222b35;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 60%;
+    font-size: 16px;
     cursor: pointer;
 }
 
 .main {
-    padding: 20px 0px;
+    overflow-y: scroll;
+    max-height: 500px;
 }
 
 .modal img {
     border-radius: 50%;
     margin: 4px;
     margin-right: 10px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid grey;
+}
+
+.modal ul {
+    padding: 0;
 }
 
 .modal li {
     list-style-type: none;
-    padding: 0px;
+    padding: 10px 30px;
     display: flex;
-    align-items: center;
+    align-items: justify-between;
+    justify-content: flex-start;
+    /* border: 1px solid palevioletred; */
+}
+
+.modal li:hover {
+    cursor: pointer;
+    background-color: #1b222a;
+}
+
+.modal span {
+    margin-bottom: 6px;
+}
+
+.memberInfo {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.modal::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+
+
+/* 
+.closeModal:hover {
+    background-color: #1b222a;
+} */
+
+.memberCount {
+    cursor: pointer;
 }
