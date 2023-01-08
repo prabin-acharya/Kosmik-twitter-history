@@ -23,7 +23,6 @@ interface Props {
 export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
   const [showUserPopup, setShowUserPopup] = useState<Boolean>(false);
   const [showMenu, setShowMenu] = useState<Boolean>(false);
-  const [liked, setLiked] = useState<Boolean>(false);
 
   const handleMouseEnter = async () => {
     if (!showUserPopup) {
@@ -58,117 +57,95 @@ export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
     setShowMenu(false);
   };
 
-  const likeTweet = async () => {
-    try {
-      const res = await fetch(`/api/action`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          tweetId: tweet.id,
-          action: "likeTweet",
-        }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setLiked(true);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
-    <div className={styles.container}>
+    <div className={styles.tweet}>
       <div
-        className={styles.tweet}
-        // onClick={() => {
-        //   window.open(
-        //     `https://twitter.com/${tweet.username}/status/${tweet.id}`,
-        //     "_blank"
-        //   );
-        // }}
+        className={styles.avatar}
+        onMouseOver={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
-        <div className={styles.tweetHeader}>
-          <div
-            className={styles.tweetHeaderLeft}
-            onMouseOver={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            <Image
-              className={styles.tweetHeaderAvatar}
-              src={tweet.profile_image_url}
-              alt="avatar"
-              width={30}
-              height={30}
-            />
-            <div className={styles.tweetHeaderName}>
-              <a href={`https://twitter.com/${tweet.username}`}>
-                <strong>{tweet.name}</strong>
-              </a>
-              <span className={styles.tweetHeaderHandle}>
-                @{tweet.username}
-              </span>
-            </div>
+        <Image
+          className={styles.tweetHeaderAvatar}
+          src={tweet.profile_image_url}
+          alt="avatar"
+          width={30}
+          height={30}
+        />
+      </div>
+      <div className={styles.tweetContent}>
+        <div className={styles.header}>
+          <div className={styles.user}>
+            <span>{tweet.name}</span>
+            <span className={styles.handle}>@{tweet.username}</span>
           </div>
 
-          <div className={styles.tweetHeaderRight}>
-            <span
-              className={styles.tweetMenu}
-              onClick={handleClickMenu}
-              ref={menuRef}
-            >
-              <MdOutlineMoreHoriz className={styles.tweetMenuIcon} />
-              {showMenu && (
-                <ListMenu
-                  mentions={tweet.mentions}
-                  ownedLists={ownedLists}
-                  username={tweet.username}
-                  id={tweet.id}
-                />
-              )}
-            </span>
-            <span className={styles.tweetHeaderDate}>
-              {formatDate(tweet.created_at)}
-            </span>
+          <div className={styles.menu} onClick={handleClickMenu} ref={menuRef}>
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="r-1awozwy">
+              <g>
+                <circle cx="5" cy="12" r="2"></circle>
+                <circle cx="12" cy="12" r="2"></circle>
+                <circle cx="19" cy="12" r="2"></circle>
+              </g>
+            </svg>
+            {showMenu && (
+              <ListMenu
+                mentions={tweet.mentions}
+                ownedLists={ownedLists}
+                username={tweet.username}
+                id={tweet.id}
+              />
+            )}
           </div>
         </div>
-        {showUserPopup && <UserDetail authorId={tweet.authorId} />}
+        {showUserPopup && <UserDetail username={tweet.username} />}
 
         <div className={styles.tweetBody}>{entitiesToText(tweet)}</div>
+        <div className={styles.date}> {formatDate(tweet.created_at)}</div>
+      </div>
 
-        <div className={styles.tweetFooter}>
-          <div className={styles.tweetFooterLike}>
-            <AiOutlineHeart
-              className={
-                !liked
-                  ? styles.tweetFooterLikeIcon
-                  : styles.tweetFooterLikeIconFill
-              }
-              onClick={likeTweet}
-            />
-            <span className={styles.tweetFooterLikeCount}>
-              {tweet.public_metrics?.like_count}
-            </span>
-          </div>
-
-          <div className={styles.tweetFooterRetweet}>
-            <AiOutlineRetweet className={styles.tweetFooterRetweetIcon} />
-            <span className={styles.tweetFooterRetweetCount}>
-              {tweet.public_metrics?.retweet_count +
-                tweet.public_metrics?.quote_count}
-            </span>
-          </div>
-
-          <div className={styles.tweetFooterReply}>
-            <FaComment className={styles.tweetFooterReplyIcon} />
-            <span className={styles.tweetFooterReplyCount}>
-              {tweet.public_metrics?.reply_count}
-            </span>
+      {/*  <div
+          className={styles.tweetHeaderLeft}
+          onMouseOver={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <Image
+            className={styles.tweetHeaderAvatar}
+            src={tweet.profile_image_url}
+            alt="avatar"
+            width={30}
+            height={30}
+          />
+          <div className={styles.tweetHeaderName}>
+            <a href={`https://twitter.com/${tweet.username}`}>
+              <strong>{tweet.name}</strong>
+            </a>
+            <span className={styles.tweetHeaderHandle}>@{tweet.username}</span>
           </div>
         </div>
-      </div>
+
+        <div className={styles.tweetHeaderRight}>
+          <span
+            className={styles.tweetMenu}
+            onClick={handleClickMenu}
+            ref={menuRef}
+          >
+            <MdOutlineMoreHoriz className={styles.tweetMenuIcon} />
+            {showMenu && (
+              <ListMenu
+                mentions={tweet.mentions}
+                ownedLists={ownedLists}
+                username={tweet.username}
+                id={tweet.id}
+              />
+            )}
+          </span>
+          <span className={styles.tweetHeaderDate}>
+            {formatDate(tweet.created_at)}
+          </span>
+        </div> */}
+      {/* </div> */}
+
+      {/* <div className={styles.tweetBody}>{entitiesToText(tweet)}</div> */}
     </div>
   );
 };
