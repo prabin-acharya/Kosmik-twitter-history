@@ -1,0 +1,247 @@
+.sidebar {
+    margin: 0;
+    width: 400px;
+    max-width: 600px;
+    position: fixed;
+    height: 100%;
+    padding: 1rem;
+    border-right: 1px solid grey;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* border: 1px solid blue; */
+}
+
+
+.profile img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    border: 1px solid lavender;
+}
+
+.header {
+    display: flex;
+    flex-direction: space-between;
+    align-items: center;
+    /* border: 1px solid grey; */
+    border-radius: 3px;
+    padding: 4px;
+    margin-bottom: 16px;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+}
+
+.name {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+
+
+.header button {
+    display: none;
+}
+
+.header button:hover {
+    cursor: pointer;
+}
+
+.close {
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+}
+
+.close:hover {
+    cursor: pointer;
+    background-color: rgba(93, 108, 139, 0.2);
+}
+
+
+/* s */
+
+/* .search,
+.lists {
+    margin-bottom: 16px;
+} */
+
+.search h4,
+.following h4,
+.lists h4,
+.dateSelector h4 {
+    margin: 5px 0px;
+}
+
+.search label {
+    display: inline-block
+}
+
+.search input {
+    width: 100%;
+}
+
+.dateSelector {
+    border: 3px solid maroon;
+    display: block;
+}
+
+.search input {
+    border: 1px solid #2f4056;
+    padding: 4px 4px;
+    outline: 1px solid #030c18;
+    background-color: #F4F4FA;
+    display: inline-block;
+}
+
+.search input:hover {
+    cursor: text;
+}
+
+.search input:focus {
+    border: 1px solid #2f4056;
+    outline: 1px solid #4d81c5;
+}
+
+.search {
+    display: flex;
+    flex-direction: column;
+}
+
+.search label {
+    display: inline-block;
+    margin-right: 15px;
+    width: 50px;
+}
+
+.search input {
+    display: inline;
+}
+
+.search div {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.search button {
+    padding: 6px 24px;
+    /* background-color: rgb(254, 202, 134); */
+    background-color: rgb(255, 238, 213);
+    ;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.search .submit {
+    justify-content: end;
+}
+
+.lists ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 3px 10px;
+    overflow: hidden;
+}
+
+.lists ul li {
+    margin-bottom: 5px;
+    padding: 5px 8px;
+    border-radius: 3px;
+    border: 1px solid #2f4056;
+    cursor: pointer;
+}
+
+.lists ul li:hover {
+    /* border: 1px solid #161f2a; */
+    outline: 1px solid rgb(183, 182, 182);
+}
+
+.selectedList {
+    outline: 1px solid rgb(183, 182, 182);
+}
+
+.followedLists,
+.ownedLists {
+    overflow-y: scroll;
+    max-height: 150px;
+    padding-bottom: 10px;
+}
+
+.lists .name {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.lists .ownerName {
+    font-size: 0.8rem;
+    font-weight: 400;
+    padding-left: 10px;
+}
+
+.lists .ownerUsername {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #a0a0a0;
+}
+
+.owner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.lists img {
+    border-radius: 50%;
+}
+
+
+.followedLists,
+.ownedLists {
+    margin-bottom: 5px;
+}
+
+
+.following {
+    display: block;
+}
+
+
+.sidebar h4,
+.sidebar h5 {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 8px;
+}
+
+
+
+.sidebar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.closedSidebar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.postCard {
+    display: block;
+    border: 1px solid #2f4056;
+    padding: 6px 12px;
+    margin-bottom: 8px;
+    /* background-color: rgb(254, 202, 134);
+     */
+    background-color: rgb(255, 238, 213);
+    border-radius: 3px;
+    text-align: center;
+}
+
+.lists .postCard {
+    margin: 16px 10px;
+}
