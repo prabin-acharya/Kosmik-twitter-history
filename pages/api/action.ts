@@ -28,22 +28,22 @@ export default async function handler(
     return res.status(400).json({ error: "Missing action." });
   }
 
-  const refreshedClient = new TwitterApi(access_Token);
+  const twitterClient = new TwitterApi(access_Token);
 
-  const userId = (await refreshedClient.v2.me()).data.id;
+  const userId = (await twitterClient.v2.me()).data.id;
 
   let response;
 
   switch (action) {
     case "likeTweet":
       console.log("like");
-      const likeRes = await refreshedClient.v2.like(userId, req.body.tweetId);
+      const likeRes = await twitterClient.v2.like(userId, req.body.tweetId);
       console.log(likeRes);
       break;
 
     case "retweet":
       console.log("retweet");
-      const retweetRes = await refreshedClient.v2.retweet(
+      const retweetRes = await twitterClient.v2.retweet(
         userId,
         req.body.tweetId
       );
@@ -52,23 +52,40 @@ export default async function handler(
 
     case "bookmarkTweet":
       console.log("bookmarkTweet");
-      const bookmarkedRes = await refreshedClient.v2.bookmark(req.body.tweetId);
+      const bookmarkedRes = await twitterClient.v2.bookmark(req.body.tweetId);
       console.log(bookmarkedRes);
+      break;
+
+    case "addMemberToList":
+      console.log("addToList");
+      response = await twitterClient.v2.addListMember(
+        req.body.listId,
+        req.body.memberId
+      );
       break;
 
     case "createList":
       console.log("createList");
-      response = await refreshedClient.v2.createList({
+      const members = req.body.members || [];
+      const createdList = await twitterClient.v2.createList({
         name: req.body.name,
         description: req.body.description,
         private: req.body.isPrivate,
       });
-      console.log(response);
+
+      members.forEach(async (member: string) => {
+        const addedMember = await twitterClient.v2.addListMember(
+          createdList.data.id,
+          member
+        );
+        response = addedMember;
+      });
+
       break;
 
     case "followList":
       console.log("followList");
-      response = await refreshedClient.v2.subscribeToList(
+      response = await twitterClient.v2.subscribeToList(
         userId,
         req.body.listId
       );
@@ -76,7 +93,7 @@ export default async function handler(
 
     case "unFollowList":
       console.log("unfollowList");
-      response = await refreshedClient.v2.unsubscribeOfList(
+      response = await twitterClient.v2.unsubscribeOfList(
         userId,
         req.body.listId
       );
@@ -86,6 +103,8 @@ export default async function handler(
       console.log("default");
       break;
   }
+
+  console.log(response);
 
   res.status(201).json({
     res: response,
