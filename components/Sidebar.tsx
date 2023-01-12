@@ -37,12 +37,14 @@ export const Sidebar: NextPage<Props> = ({ user, lists, closeSidebar }) => {
         to: to,
       });
     }
-    const createList = router.query.createList;
   }, [router.query]);
 
-  console.log(lists, "$$$");
   const ownedLists = lists.filter((list) => list.owner.id === user.id);
   const followedLists = lists.filter((list) => list.owner.id !== user.id);
+  console.log(router.asPath, "%%%");
+
+  const createListUrl = router.asPath + "?createList=true";
+  console.log(createListUrl, "createListUrl");
 
   return (
     <div className={styles.sidebar}>
@@ -192,8 +194,9 @@ export const Sidebar: NextPage<Props> = ({ user, lists, closeSidebar }) => {
       </div>
       <div>
         <Link
-          href={`/?createList=${true}`}
-          as={`/lists/create`}
+          // href={`${router.asPath}/?createList=${true}`}
+          href={createListUrl}
+          as={`/i/create`}
           className={styles.postCard}
         >
           {/* <svg viewBox="0 0 24 24" aria-hidden="true" className={styles.plus}>

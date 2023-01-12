@@ -1,10 +1,8 @@
 import { NextPage } from "next";
 import Link from "next/link";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import React from "react";
 import { FiTwitter } from "react-icons/fi";
-import { IoClose } from "react-icons/io5";
-import { ListModal } from "../components/ListModal";
 import styles from "./../styles/Signin.module.css";
 
 interface Props {}

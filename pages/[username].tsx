@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { BiArrowBack } from "react-icons/bi";
 import { Spinner } from "../components/Spinner";
 import { ListType, User } from "../types";
 import styles from "./../styles/username.module.css";
@@ -9,11 +10,17 @@ import styles from "./../styles/username.module.css";
 interface Props {
   lists: ListType[];
   handleListsChange: (updatedLists: ListType[]) => void;
+  showSidebar: boolean;
+  openSidebar: () => void;
+  closeSidebar: () => void;
 }
 
 export const Profile: NextPage<Props> = ({
   lists: usersLists,
   handleListsChange,
+  showSidebar,
+  openSidebar,
+  closeSidebar,
 }) => {
   const router = useRouter();
   const { username } = router.query;
@@ -72,6 +79,27 @@ export const Profile: NextPage<Props> = ({
 
   return (
     <div className={styles.container}>
+      <div className={styles.header}>
+        <div
+          onClick={() => {
+            router.back();
+          }}
+        >
+          <BiArrowBack className={styles.backArrow} />
+        </div>
+        {user && !showSidebar && (
+          <Image
+            src={user?.profile_image_url as string}
+            width={30}
+            height={30}
+            alt="fd"
+            onClick={() => {
+              openSidebar();
+            }}
+          />
+        )}
+        <h1>Kosmik</h1>
+      </div>
       <div className={styles.profile}>
         <Image
           src={user.profile_image_url}
@@ -84,7 +112,6 @@ export const Profile: NextPage<Props> = ({
         <span>{user.description}</span>
         <button>Follow</button>
       </div>
-      <hr />
 
       <div className={styles.lists}>
         {ownedLists.length === 0 && followedLists.length === 0 ? (

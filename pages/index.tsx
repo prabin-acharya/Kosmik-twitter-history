@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 
 import Router, { useRouter } from "next/router";
-import { CreateList } from "../components/CreateList";
+import { CreateList } from "../components/CreateListModal";
 import { Spinner } from "../components/Spinner";
 import { Tweet } from "../components/Tweet";
 
@@ -25,9 +25,18 @@ interface Props {
   user: User;
   lists: ListType[];
   handleListsChange: (updatedLists: ListType[]) => void;
+  showSidebar: boolean;
+  openSidebar: () => void;
+  closeSidebar: () => void;
 }
 
-const Home: NextPage<Props> = ({ user, lists, handleListsChange }) => {
+const Home: NextPage<Props> = ({
+  user,
+  lists,
+  showSidebar,
+  openSidebar,
+  handleListsChange,
+}) => {
   const [userTimeline, setUserTimeline] = useState<TweetType[]>();
   const [timelineLoading, setTimelineLoading] = useState(true);
 
@@ -54,9 +63,8 @@ const Home: NextPage<Props> = ({ user, lists, handleListsChange }) => {
   }, [router.query.from, router.query.to, router.pathname]);
 
   const ownedLists = lists.filter((list) => list.owner.id === user.id);
-  const followedLists = lists.filter((list) => list.owner.id !== user.id);
   return (
-    <div className={styles.tweetsContainer}>
+    <>
       {timelineLoading ? (
         <div className={styles.tweetContainer}>
           <div className={styles.loading}>
@@ -64,20 +72,29 @@ const Home: NextPage<Props> = ({ user, lists, handleListsChange }) => {
           </div>
         </div>
       ) : (
-        <div className={styles.tweetContainer}>
-          {userTimeline?.map((tweet) => (
-            <div
-              key={tweet.id}
-              // onClick={() => router.push(`/tweet/${tweet.id}`)}
-            >
-              <Tweet tweet={tweet} ownedLists={ownedLists} />
-            </div>
-          ))}
+        <div className={styles.container}>
+          <div className={styles.header}>
+            {user && !showSidebar && (
+              <Image
+                src={user?.profile_image_url as string}
+                width={30}
+                height={30}
+                alt="fd"
+                onClick={() => {
+                  openSidebar();
+                }}
+              />
+            )}
+            <h1>Kosmik</h1>
+          </div>
+          <div className={styles.timeline}>
+            {userTimeline?.map((tweet) => (
+              <Tweet key={tweet.id} tweet={tweet} ownedLists={ownedLists} />
+            ))}
+          </div>
         </div>
       )}
-    </div>
-    // {showModal && <CreateList setShowModal={setShowModal} />}
-    // </div>
+    </>
   );
 };
 

@@ -1,11 +1,13 @@
 import { NextPage } from "next";
 import Image from "next/image";
+import Link from "next/link";
+import router from "next/router";
 import React, { useEffect, useState } from "react";
 import { AiOutlineHeart, AiOutlineRetweet } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
 import { MdOutlineMoreHoriz } from "react-icons/md";
 
-import { TweetType } from "../types";
+import { ListType, TweetType } from "../types";
 import { ListMenu } from "./ListMenu";
 import styles from "./Tweet.module.css";
 import { UserDetail } from "./UserDetail";
@@ -13,11 +15,7 @@ import { formatDate } from "./utils";
 
 interface Props {
   tweet: TweetType;
-  ownedLists: {
-    id: number;
-    name: string;
-    private: Boolean;
-  }[];
+  ownedLists: ListType[];
 }
 
 export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
@@ -63,6 +61,9 @@ export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
         className={styles.avatar}
         onMouseOver={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        onClick={() => {
+          router.push(`/${tweet.username}`);
+        }}
       >
         <Image
           className={styles.tweetHeaderAvatar}
@@ -102,50 +103,6 @@ export const Tweet: NextPage<Props> = ({ tweet, ownedLists }) => {
         <div className={styles.tweetBody}>{entitiesToText(tweet)}</div>
         <div className={styles.date}> {formatDate(tweet.created_at)}</div>
       </div>
-
-      {/*  <div
-          className={styles.tweetHeaderLeft}
-          onMouseOver={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <Image
-            className={styles.tweetHeaderAvatar}
-            src={tweet.profile_image_url}
-            alt="avatar"
-            width={30}
-            height={30}
-          />
-          <div className={styles.tweetHeaderName}>
-            <a href={`https://twitter.com/${tweet.username}`}>
-              <strong>{tweet.name}</strong>
-            </a>
-            <span className={styles.tweetHeaderHandle}>@{tweet.username}</span>
-          </div>
-        </div>
-
-        <div className={styles.tweetHeaderRight}>
-          <span
-            className={styles.tweetMenu}
-            onClick={handleClickMenu}
-            ref={menuRef}
-          >
-            <MdOutlineMoreHoriz className={styles.tweetMenuIcon} />
-            {showMenu && (
-              <ListMenu
-                mentions={tweet.mentions}
-                ownedLists={ownedLists}
-                username={tweet.username}
-                id={tweet.id}
-              />
-            )}
-          </span>
-          <span className={styles.tweetHeaderDate}>
-            {formatDate(tweet.created_at)}
-          </span>
-        </div> */}
-      {/* </div> */}
-
-      {/* <div className={styles.tweetBody}>{entitiesToText(tweet)}</div> */}
     </div>
   );
 };
@@ -186,14 +143,9 @@ const entitiesToText = (tweet: TweetType) => {
     }
     if (entity?.screen_name) {
       parts.push(
-        <a
-          key={entity.key}
-          href={`https://twitter.com/${entity.screen_name}`}
-          target="_blank"
-          rel="noreferrer"
-        >
+        <Link key={entity.key} href={`/${entity.screen_name}`}>
           @{entity.screen_name}
-        </a>
+        </Link>
       );
     } else if (entity.url) {
       parts.push(

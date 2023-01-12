@@ -1,17 +1,62 @@
 .container {
     padding: 0 0rem;
     font-family: Arial, Helvetica, sans-serif;
-    /* margin: 0px 400px */
     max-width: 700px;
-    margin: 0 auto;
+    /* margin: 0 auto; */
     min-height: 100vh;
     height: 100%;
-    border-left: 2px solid grey;
     border-right: 2px solid grey;
+    position: relative;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    width: 700px;
+    border: 1px solid grey;
+    background-color: rgb(255, 238, 213);
+    border: 1px solid green;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 4px 10px;
+    align-items: center;
+    border: 1px solid yellow;
+}
+
+
+
+.backArrow {
+    border: none;
+    color: black;
+    border-radius: 50%;
+    font-size: 16px;
+    padding: 6px;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+}
+
+.backArrow:hover {
+    background-color: rgb(246, 228, 202);
+}
+
+@media screen and (max-width: 1100px) {
+    .header {
+        width: calc(100% - 400px);
+    }
+}
+
+@media screen and (max-width: 720px) {
+    .header {
+        width: 100%;
+    }
+
 }
 
 .profile {
     padding: 30px 10px;
+    margin-top: 60px;
 }
 
 .lists {
@@ -38,11 +83,13 @@
     padding: 16px 20px;
     display: flex;
     justify-content: space-between;
+    cursor: pointer;
 }
 
 .list:hover {
     /* cursor: pointer; */
-    background-color: #1b222a;
+    /* background-color: #1b222a; */
+    background-color: rgb(210, 203, 192);
 }
 
 .list h4 {
@@ -56,7 +103,7 @@
 
 .lists ul {
     list-style-type: none;
-    /* padding: 0px; */
+    padding: 0px;
 }
 
 .list .owner {
