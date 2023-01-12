@@ -1,32 +1,28 @@
 .container {
     width: fit-content;
     max-width: 400px;
-    /* height: 200px; */
     border-radius: 8px;
     position: absolute;
     padding: 6px 0px;
-    background-color: white;
     z-index: 1;
-    background-color: #222b35;
+    background-color: #f5f5f5;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgb(65, 61, 61);
+    border: 1px solid rgb(161, 157, 157);
 }
 
 
 .container ul {
-    /* border: 1px solid sienna; */
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
 .container ul li:hover {
-    background-color: #15202B;
+    background-color: #cfcdcd;
     cursor: pointer;
 }
 
 .container ul li {
-    /* border: 1px solid sienna; */
     padding: 6px 16px;
     display: flex;
     align-items: center;

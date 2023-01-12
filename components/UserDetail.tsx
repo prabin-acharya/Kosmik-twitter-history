@@ -6,15 +6,7 @@ import { Spinner } from "./Spinner";
 import styles from "./UserDetail.module.css";
 
 interface Props {
-  user?: {
-    data: {
-      id: number;
-      name: string;
-      username: string;
-      description: string;
-    };
-  };
-  authorId: number;
+  username: string;
 }
 
 interface UserData {
@@ -31,20 +23,21 @@ interface UserData {
   };
 }
 
-export const UserDetail: NextPage<Props> = ({ user, authorId }) => {
+export const UserDetail: NextPage<Props> = ({ username }) => {
   const [userData, setUserData] = React.useState<UserData>();
   const [loading, setLoading] = React.useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const res = await fetch("/api/user/" + authorId);
+      const res = await fetch("/api/user/" + username);
       const data = await res.json();
       setUserData(data.user.data);
+      console.log(data);
       setLoading(false);
     };
 
-    // fetchUserData();
-  }, [authorId]);
+    fetchUserData();
+  }, [username]);
 
   if (loading || !userData)
     return (
@@ -95,13 +88,3 @@ export const UserDetail: NextPage<Props> = ({ user, authorId }) => {
     </div>
   );
 };
-
-{
-  /* name, username, profile_image, description///pinned_tweet?
-      followiers_count, following_count */
-}
-
-{
-  /* <ul>{authorId}</ul> */
-}
-//  <ul>{userData?.description}</ul>;

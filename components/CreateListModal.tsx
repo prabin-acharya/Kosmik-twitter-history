@@ -6,13 +6,13 @@ import { User } from "../types";
 import styles from "./CreateListModal.module.css";
 
 interface Props {
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowCreateListModal: React.Dispatch<React.SetStateAction<boolean>>;
   user: User;
   following: User[];
 }
 
 export const CreateListModal: NextPage<Props> = ({
-  setShowModal,
+  setShowCreateListModal,
   user,
   following,
 }) => {
@@ -69,7 +69,7 @@ export const CreateListModal: NextPage<Props> = ({
     const data = await res.json();
     console.log(data);
     const id = data.res.data.id;
-    setShowModal(false);
+    setShowCreateListModal(false);
     router.push(`/lists/${id}`);
   };
 
@@ -101,14 +101,14 @@ export const CreateListModal: NextPage<Props> = ({
             <h2>Create a list</h2>
             {/* <button
               onClick={() => {
-                setShowModal(false);
+                setShowCreateListModal(false);
               }}
             > */}
             {/*   custom close button cross with no background just a cross   */}
             <div
               className={styles.close}
               onClick={() => {
-                setShowModal(false);
+                setShowCreateListModal(false);
                 // router.push("/");
                 router.back();
               }}

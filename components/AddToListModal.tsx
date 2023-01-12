@@ -35,15 +35,16 @@ export const AddToListModal: NextPage<Props> = ({
     return null;
   }
 
-  const addToList = async (selectedMention: number, listId: number) => {
-    const res = await fetch("/api/addToList", {
+  const addToList = async (memberId: number, listId: number) => {
+    const res = await fetch("/api/action", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        action: "addMemberToList",
         listId,
-        selectedMention,
+        memberID: memberId,
       }),
     });
     const data = await res.json();
@@ -80,7 +81,7 @@ export const AddToListModal: NextPage<Props> = ({
                   key={list.id}
                   onClick={(e) => {
                     e.stopPropagation();
-                    // addToList(selectedMention.id, list.id);
+                    addToList(selectedMention.id, list.id);
                   }}
                 >
                   <h3>{list.name}</h3>
