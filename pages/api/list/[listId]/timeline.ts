@@ -10,7 +10,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const access_Token = req.cookies.access_Token as string;
-  console.log("+++++++++");
 
   if (!access_Token) {
     res.status(401).json({

@@ -28,85 +28,91 @@ export default async function handler(
     return res.status(400).json({ error: "Missing action." });
   }
 
-  const twitterClient = new TwitterApi(access_Token);
+  try {
+    const twitterClient = new TwitterApi(access_Token);
 
-  const userId = (await twitterClient.v2.me()).data.id;
+    const userId = (await twitterClient.v2.me()).data.id;
 
-  let response;
+    let response;
 
-  switch (action) {
-    case "likeTweet":
-      console.log("like");
-      const likeRes = await twitterClient.v2.like(userId, req.body.tweetId);
-      console.log(likeRes);
-      break;
+    switch (action) {
+      case "likeTweet":
+        console.log("like");
+        const likeRes = await twitterClient.v2.like(userId, req.body.tweetId);
+        console.log(likeRes);
+        break;
 
-    case "retweet":
-      console.log("retweet");
-      const retweetRes = await twitterClient.v2.retweet(
-        userId,
-        req.body.tweetId
-      );
-      console.log(retweetRes);
-      break;
-
-    case "bookmarkTweet":
-      console.log("bookmarkTweet");
-      const bookmarkedRes = await twitterClient.v2.bookmark(req.body.tweetId);
-      console.log(bookmarkedRes);
-      break;
-
-    case "addMemberToList":
-      console.log("addToList");
-      response = await twitterClient.v2.addListMember(
-        req.body.listId,
-        req.body.memberId
-      );
-      break;
-
-    case "createList":
-      console.log("createList");
-      const members = req.body.members || [];
-      const createdList = await twitterClient.v2.createList({
-        name: req.body.name,
-        description: req.body.description,
-        private: req.body.isPrivate,
-      });
-
-      members.forEach(async (member: string) => {
-        const addedMember = await twitterClient.v2.addListMember(
-          createdList.data.id,
-          member
+      case "retweet":
+        console.log("retweet");
+        const retweetRes = await twitterClient.v2.retweet(
+          userId,
+          req.body.tweetId
         );
-        response = addedMember;
-      });
+        console.log(retweetRes);
+        break;
 
-      break;
+      case "bookmarkTweet":
+        console.log("bookmarkTweet");
+        const bookmarkedRes = await twitterClient.v2.bookmark(req.body.tweetId);
+        console.log(bookmarkedRes);
+        break;
 
-    case "followList":
-      console.log("followList");
-      response = await twitterClient.v2.subscribeToList(
-        userId,
-        req.body.listId
-      );
-      break;
+      case "addMemberToList":
+        console.log("addToList");
+        response = await twitterClient.v2.addListMember(
+          req.body.listId,
+          req.body.memberId
+        );
+        break;
 
-    case "unFollowList":
-      console.log("unfollowList");
-      response = await twitterClient.v2.unsubscribeOfList(
-        userId,
-        req.body.listId
-      );
-      break;
+      case "createList":
+        console.log("createList");
+        const members = req.body.members || [];
+        const createdList = await twitterClient.v2.createList({
+          name: req.body.name,
+          description: req.body.description,
+          private: req.body.isPrivate,
+        });
 
-    default:
-      console.log("default");
-      break;
+        members.forEach(async (member: string) => {
+          const addedMember = await twitterClient.v2.addListMember(
+            createdList.data.id,
+            member
+          );
+          response = addedMember;
+        });
+
+        break;
+
+      case "followList":
+        console.log("followList");
+        response = await twitterClient.v2.subscribeToList(
+          userId,
+          req.body.listId
+        );
+        break;
+
+      case "unFollowList":
+        console.log("unfollowList");
+        response = await twitterClient.v2.unsubscribeOfList(
+          userId,
+          req.body.listId
+        );
+        break;
+
+      default:
+        console.log("default");
+        break;
+    }
+
+    console.log(response);
+
+    res.status(201).json({
+      res: response,
+    });
+  } catch (error: any) {
+    res.status(error.data.status).json({
+      Error: error.data.detail,
+    });
   }
-
-  console.log(response);
-
-  res.status(201).json({
-    res: response,
-  });
 }

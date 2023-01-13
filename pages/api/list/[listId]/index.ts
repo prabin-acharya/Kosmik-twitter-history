@@ -14,27 +14,33 @@ export default async function handler(
     return;
   }
 
-  const refreshedClient = new TwitterApi(access_Token);
+  try {
+    const twitterClient = new TwitterApi(access_Token);
 
-  const listId = req.query.listId;
+    const listId = req.query.listId;
 
-  if (!listId) {
-    res.status(400).json({
-      Error: "List id not provided",
+    if (!listId) {
+      res.status(400).json({
+        Error: "List id not provided",
+      });
+      return;
+    }
+
+    const list = await twitterClient.v2.list(listId as string, {
+      "list.fields": ["description", "member_count", "follower_count"],
+      "user.fields": ["id", "name", "username", "profile_image_url"],
+      expansions: "owner_id",
     });
-    return;
+
+    res.status(200).json({
+      list: {
+        ...list.data,
+        owner: list.includes?.users?.[0],
+      },
+    });
+  } catch (error: any) {
+    res.status(error.data.status).json({
+      Error: error.data.detail,
+    });
   }
-
-  const list = await refreshedClient.v2.list(listId as string, {
-    "list.fields": ["description", "member_count", "follower_count"],
-    "user.fields": ["id", "name", "username", "profile_image_url"],
-    expansions: "owner_id",
-  });
-
-  res.status(200).json({
-    list: {
-      ...list.data,
-      owner: list.includes?.users?.[0],
-    },
-  });
 }
