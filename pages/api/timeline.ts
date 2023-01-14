@@ -4,6 +4,7 @@ import {
   TweetV2UserTimelineParams,
   TwitterApi,
   TwitterV2IncludesHelper,
+  UserV2,
 } from "twitter-api-v2";
 
 export default async function handler(
@@ -11,7 +12,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const access_Token = req.cookies.access_Token as string;
-  // Check that a valid access token is present
+
   if (!access_Token) {
     res.status(401).json({
       Error: " User not authenticated",
@@ -22,9 +23,14 @@ export default async function handler(
   try {
     const client = new TwitterApi(access_Token);
     const me = await client.v2.me();
-    const following = await client.v2.following(me.data.id);
+    const following = (await client.v2.following(me.data.id)).data;
 
-    // Define the array of strings and objects
+    console.log(following.slice(0, 4));
+
+    const listMembers = await client.v2.listMembers("810352678735781888");
+    console.log(listMembers.data.data);
+    // console.log(listMembers.data.slice(0, 4), "======");
+
     let timelineTweets: string | any[] = [];
 
     // Define the date range
@@ -35,10 +41,15 @@ export default async function handler(
     const intervalTime = to.getTime() - from.getTime();
     const interval = intervalTime / 3;
 
-    const getTweetsTimeline = async (dateFrom: Date, dateTo: Date) => {
-      const members = shuffleArray(following.data)?.slice(0, 7);
-
+    const getTweetsTimeline = async (
+      dateFrom: Date,
+      dateTo: Date,
+      members: UserV2[]
+    ) => {
       // get 10 tweets for each member
+
+      // const members = following.slice(0, 4);
+
       const randomizedFollowingOrderedTweets = members.map(async (user) => {
         const options: Partial<TweetV2UserTimelineParams> = {
           max_results: 10,
@@ -100,7 +111,9 @@ export default async function handler(
       const dateFrom = new Date(from.getTime() + i * interval);
       const dateTo = new Date(from.getTime() + (i + 1) * interval);
 
-      const newTweets = await getTweetsTimeline(dateFrom, dateTo);
+      const members = shuffleArray(following).slice(0, 7);
+
+      const newTweets = await getTweetsTimeline(dateFrom, dateTo, members);
       timelineTweets = [...timelineTweets, ...newTweets];
       i++;
     }

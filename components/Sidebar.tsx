@@ -27,10 +27,10 @@ export const Sidebar: NextPage<Props> = ({ user, lists, closeSidebar }) => {
     const from = router.query.from as string;
     const to = router.query.to as string;
 
-    let url = `/api/home`;
+    let url = `/api/timeline`;
 
     if (from && to) {
-      url = `/api/home?from=${from}&to=${to}`;
+      url = `/api/timeline?from=${from}&to=${to}`;
 
       setDate({
         from: from,

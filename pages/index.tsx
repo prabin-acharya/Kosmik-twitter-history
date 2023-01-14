@@ -3,8 +3,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 
-import Router, { useRouter } from "next/router";
-import { CreateList } from "../components/CreateListModal";
+import { useRouter } from "next/router";
 import { Spinner } from "../components/Spinner";
 import { Tweet } from "../components/Tweet";
 
@@ -30,13 +29,7 @@ interface Props {
   closeSidebar: () => void;
 }
 
-const Home: NextPage<Props> = ({
-  user,
-  lists,
-  showSidebar,
-  openSidebar,
-  handleListsChange,
-}) => {
+const Home: NextPage<Props> = ({ user, lists, showSidebar, openSidebar }) => {
   const [userTimeline, setUserTimeline] = useState<TweetType[]>();
   const [timelineLoading, setTimelineLoading] = useState(true);
 
@@ -46,10 +39,10 @@ const Home: NextPage<Props> = ({
     const from = router.query.from as string;
     const to = router.query.to as string;
 
-    let url = `/api/home`;
+    let url = `/api/timeline`;
 
     if (from && to) {
-      url = `/api/home?from=${from}&to=${to}`;
+      url = `/api/timeline?from=${from}&to=${to}`;
     }
 
     const fetchHome = async (url: string) => {
@@ -59,10 +52,10 @@ const Home: NextPage<Props> = ({
       setTimelineLoading(false);
     };
 
-    if (router.pathname !== "/lists/create") fetchHome(url);
+    fetchHome(url);
   }, [router.query.from, router.query.to, router.pathname]);
 
-  const ownedLists = lists.filter((list) => list.owner.id === user.id);
+  const ownedLists = lists?.filter((list) => list.owner.id === user.id);
   return (
     <>
       {timelineLoading ? (
