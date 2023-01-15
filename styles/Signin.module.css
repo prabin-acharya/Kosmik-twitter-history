@@ -108,3 +108,12 @@
 .container button:hover {
     cursor: pointer;
 }
+
+
+.container nav {
+    display: flex;
+    padding: 10px;
+    font-size: 24px;
+    font-weight: 600;
+    color: rgba(33, 138, 195, 0.837);
+}

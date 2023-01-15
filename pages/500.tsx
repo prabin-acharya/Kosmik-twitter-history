@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 
-export default function Custom404() {
+export default function Custom500() {
   return (
     <h1
       style={{
@@ -11,7 +11,7 @@ export default function Custom404() {
         color: "rosybrown",
       }}
     >
-      AHHH!... Page Not Found
+      Too many requests. Try again in 10 minutes
     </h1>
   );
 }
