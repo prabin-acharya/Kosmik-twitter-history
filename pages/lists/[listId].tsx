@@ -42,7 +42,7 @@ export const ListPage: NextPage<Props> = ({
       const data = await res.json();
       setList(data.list);
 
-      const tweets = await fetch(`/api/list/${listId}/timeline`);
+      const tweets = await fetch(`/api/timeline?listId=${listId}`);
       const tweetsData = await tweets.json();
       setTweets(tweetsData.tweets);
       setIsLoading(false);
@@ -175,7 +175,7 @@ export const ListPage: NextPage<Props> = ({
               setShowModal(true);
             }}
           >
-            edit list
+            Edit List
           </button>
         ) : (
           <>
@@ -239,11 +239,12 @@ const MembersModal: NextPage<MembersModalProps> = ({
   user,
 }) => {
   const [members, setMembers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [showMembers, setShowMembers] = useState(true);
+  const [newMembers, setNewMembers] = useState<User[]>([]);
 
   const [member, setMember] = useState("");
   const [showSuggestion, setShowSuggestion] = useState(false);
-  // const [members, setMembers] = useState<User[]>([]);
 
   const router = useRouter();
 
@@ -277,6 +278,7 @@ const MembersModal: NextPage<MembersModalProps> = ({
       const res = await fetch(`/api/list/${list.id}/members`);
       const data = await res.json();
       setMembers(data.members);
+      setIsLoading(false);
       console.log(data);
     };
 
@@ -285,15 +287,14 @@ const MembersModal: NextPage<MembersModalProps> = ({
 
   const handleClickSuggestedMember = (user: User) => {
     console.log(members.includes(user));
-    !members.includes(user) && setMembers([...members, user]);
+    !newMembers.includes(user) && setNewMembers([...newMembers, user]);
     setMember("");
     setShowSuggestion(false);
   };
 
-  const removeSelecetdMember = (user: User) => {
-    const updatedMembers = members.filter((member) => member.id !== user.id);
-    console.log(updatedMembers, user);
-    setMembers(updatedMembers);
+  const unSelectMember = (user: User) => {
+    const updatedMembers = newMembers.filter((member) => member.id !== user.id);
+    setNewMembers(updatedMembers);
   };
 
   const lastUser = member.split(",").pop() as string;
@@ -301,12 +302,31 @@ const MembersModal: NextPage<MembersModalProps> = ({
     user.username.toLocaleLowerCase().startsWith(lastUser.toLowerCase())
   );
 
+  const removeMember = (user: User) => {};
+
+  const addMembersToList = async () => {
+    const res = await fetch(`/api/action`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        action: "addMembersToList",
+        listId: list.id,
+        members: newMembers.map((member) => member.id),
+      }),
+    });
+
+    const data = await res.json();
+    console.log(data);
+  };
+
   const isOwnedList = list?.owner.id === user.id;
 
   return (
     <div className={styles.backdrop}>
       <div className={styles.modal}>
-        {!members ? (
+        {isLoading ? (
           <Spinner />
         ) : (
           <>
@@ -361,107 +381,127 @@ const MembersModal: NextPage<MembersModalProps> = ({
             {showMembers ? (
               <>
                 <div className={styles.main}>
-                  <ul>
-                    {members?.map((member) => (
-                      <li
-                        key={member.id}
-                        onClick={() => router.push(`/${member.username}`)}
-                      >
-                        <Image
-                          src={member.profile_image_url}
-                          alt="Picture of the author"
-                          width={50}
-                          height={50}
-                        />
-                        <div className={styles.memberInfo}>
-                          <span>
-                            <b>{member.name}</b>
-                          </span>
-                          <span className={styles.subtext}>
-                            @{member.username}
-                          </span>
-                          <span>{member.description}</span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className={styles.editMembers}>
+                    <ul>
+                      {members?.map((member) => (
+                        <li
+                          key={member.id}
+                          onClick={() => router.push(`/${member.username}`)}
+                        >
+                          <div className={styles.user}>
+                            <Image
+                              src={member.profile_image_url}
+                              alt="Picture of the author"
+                              width={50}
+                              height={50}
+                            />
+                            <div className={styles.memberInfo}>
+                              <span>
+                                <b>{member.name}</b>
+                              </span>
+                              <span className={styles.subtext}>
+                                @{member.username}
+                              </span>
+                              <span>{member.description}</span>
+                            </div>
+                          </div>
+                          {isOwnedList && (
+                            <button
+                              className={styles.removeMember}
+                              onClick={() => removeMember(member)}
+                            >
+                              Remove
+                            </button>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </>
             ) : (
               <>
                 <div className={styles.main}>
                   <div className={styles.addMembers}>
-                    <h3>Add members</h3>
-                    <div className={styles.selectedMembers}>
-                      <ul>
-                        {members.map((member) => (
-                          <li key={member.id} className={styles.member}>
-                            <Image
-                              src={member.profile_image_url}
-                              alt="profile image"
-                              width={20}
-                              height={20}
-                            />
-                            <span>@{member.username}</span>
-                            {/* svg cross  */}
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="24"
-                              height="24"
-                              fill="none"
-                              stroke="currentColor"
-                              onClick={() => removeSelecetdMember(member)}
-                            >
-                              <line x1="16" y1="10" x2="10" y2="16"></line>
-                              <line x1="10" y1="10" x2="16" y2="16"></line>
-                            </svg>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className={styles.members}>
-                      <input
-                        type="text"
-                        name="members"
-                        value={member}
-                        onChange={(e) => setMember(e.target.value)}
-                        onFocus={() => {
-                          setShowSuggestion(true);
-                        }}
-                        // onBlur={() => {
-                        //   setShowSuggestion(false);
-                        // }}
-                        ref={memberRef}
-                        placeholder="Search people by username"
-                        autoComplete="off"
-                      />
-                      {showSuggestion && (
-                        <div className={styles.suggestions} ref={suggestionRef}>
-                          <ul>
-                            {suggestions.slice(0, 4).map((user) => (
-                              <li
-                                key={user.id}
-                                onClick={() => {
-                                  handleClickSuggestedMember(user);
-                                }}
+                    <div>
+                      <h3>Add members</h3>
+                      <div className={styles.selectedMembers}>
+                        <ul>
+                          {newMembers.map((member) => (
+                            <li key={member.id} className={styles.member}>
+                              <Image
+                                src={member.profile_image_url}
+                                alt="profile image"
+                                width={20}
+                                height={20}
+                              />
+                              <span>@{member.username}</span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                fill="none"
+                                stroke="currentColor"
+                                onClick={() => unSelectMember(member)}
                               >
-                                <Image
-                                  src={user.profile_image_url}
-                                  alt="profile image"
-                                  width={30}
-                                  height={30}
-                                />
-                                <div>
-                                  <span>{user.name}</span>
-                                  <span>@{user.username}</span>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
+                                <line x1="14" y1="7" x2="7" y2="14"></line>
+                                <line x1="7" y1="7" x2="14" y2="14"></line>
+                              </svg>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className={styles.members}>
+                        <input
+                          type="text"
+                          name="members"
+                          value={member}
+                          onChange={(e) => setMember(e.target.value)}
+                          onFocus={() => {
+                            setShowSuggestion(true);
+                          }}
+                          ref={memberRef}
+                          placeholder="Search people by username"
+                          autoComplete="off"
+                        />
+                        {showSuggestion && (
+                          <div
+                            className={styles.suggestions}
+                            ref={suggestionRef}
+                          >
+                            <ul>
+                              {suggestions.slice(0, 4).map((user) => (
+                                <li
+                                  key={user.id}
+                                  onClick={() => {
+                                    handleClickSuggestedMember(user);
+                                  }}
+                                >
+                                  <Image
+                                    src={user.profile_image_url}
+                                    alt="profile image"
+                                    width={30}
+                                    height={30}
+                                  />
+                                  <div>
+                                    <span>{user.name}</span>
+                                    <span>@{user.username}</span>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
                     </div>
+                    <button
+                      onClick={() => {
+                        addMembersToList();
+                      }}
+                    >
+                      Add members
+                    </button>
                   </div>
                 </div>
               </>
