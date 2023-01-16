@@ -23,13 +23,25 @@ export default async function handler(
   try {
     const client = new TwitterApi(access_Token);
     const me = await client.v2.me();
-    const following = (await client.v2.following(me.data.id)).data;
 
-    console.log(following.slice(0, 4));
+    const listId = req.query.listId as string;
 
-    const listMembers = await client.v2.listMembers("810352678735781888");
-    console.log(listMembers.data.data);
-    // console.log(listMembers.data.slice(0, 4), "======");
+    let members: UserV2[] = [];
+
+    if (listId) {
+      // list timeline
+      const listMembers = await client.v2.listMembers(listId);
+      for await (const user of listMembers) {
+        members.push({
+          id: user.id,
+          name: user.name,
+          username: user.username,
+        });
+      }
+    } else {
+      // home timeline
+      members = (await client.v2.following(me.data.id)).data;
+    }
 
     let timelineTweets: string | any[] = [];
 
@@ -111,9 +123,13 @@ export default async function handler(
       const dateFrom = new Date(from.getTime() + i * interval);
       const dateTo = new Date(from.getTime() + (i + 1) * interval);
 
-      const members = shuffleArray(following).slice(0, 7);
+      // const sembers = shuffleArray(following).slice(0, 7);
 
-      const newTweets = await getTweetsTimeline(dateFrom, dateTo, members);
+      const newTweets = await getTweetsTimeline(
+        dateFrom,
+        dateTo,
+        shuffleArray(members).slice(0, 7)
+      );
       timelineTweets = [...timelineTweets, ...newTweets];
       i++;
     }
