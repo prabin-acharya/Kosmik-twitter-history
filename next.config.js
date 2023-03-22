@@ -8,7 +8,7 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: "/lists/create",
+        source: "/i/create",
         destination: "/?createList=true",
         permanent: true,
       },

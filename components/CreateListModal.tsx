@@ -99,17 +99,12 @@ export const CreateListModal: NextPage<Props> = ({
         <div className={styles.main}>
           <div className={styles.header}>
             <h2>Create a list</h2>
-            {/* <button
-              onClick={() => {
-                setShowCreateListModal(false);
-              }}
-            > */}
-            {/*   custom close button cross with no background just a cross   */}
             <div
               className={styles.close}
               onClick={() => {
                 setShowCreateListModal(false);
-                // router.push("/");
+
+                //
                 router.back();
               }}
             >
@@ -174,7 +169,6 @@ export const CreateListModal: NextPage<Props> = ({
                           height={20}
                         />
                         <span>@{member.username}</span>
-                        {/* svg cross  */}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
@@ -200,9 +194,6 @@ export const CreateListModal: NextPage<Props> = ({
                     onFocus={() => {
                       setShowSuggestion(true);
                     }}
-                    // onBlur={() => {
-                    //   setShowSuggestion(false);
-                    // }}
                     ref={memberRef}
                     placeholder="Search people by username"
                     autoComplete="off"
@@ -235,14 +226,7 @@ export const CreateListModal: NextPage<Props> = ({
                 </div>
               </div>
 
-              <button
-                type="submit"
-                // onClick={() => {
-                //   createList();
-                // }}
-              >
-                Create List
-              </button>
+              <button type="submit">Create List</button>
             </form>
           </div>
         </div>

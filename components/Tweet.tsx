@@ -3,12 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import router from "next/router";
 import React, { useEffect, useState } from "react";
-import { AiOutlineHeart, AiOutlineRetweet } from "react-icons/ai";
-import { FaComment } from "react-icons/fa";
-import { MdOutlineMoreHoriz } from "react-icons/md";
 
 import { ListType, TweetType } from "../types";
-import { ListMenu } from "./ListMenu";
+// import { ListMenu } from "./ListMenu";
 import styles from "./Tweet.module.css";
 import { UserDetail } from "./UserDetail";
 import { formatDate } from "./utils";
@@ -162,4 +159,78 @@ const entitiesToText = (tweet: TweetType) => {
   }
 
   return parts;
+};
+
+import { AddToListModal } from "./AddToListModal";
+import styles2 from "./ListMenu.module.css";
+
+interface PropsMenu {
+  mentions: {
+    username: string;
+    id: number;
+    start?: number;
+    end?: number;
+  }[];
+  ownedLists: ListType[];
+  username: string;
+  id: number;
+}
+
+export const ListMenu: NextPage<PropsMenu> = ({
+  mentions,
+  ownedLists,
+  username,
+  id,
+}) => {
+  const [showModal, setShowModal] = React.useState(false);
+  const [selectedMention, setSelectedMention] = React.useState({});
+
+  const handleBookmark = () => {};
+
+  return (
+    <div className={styles2.container}>
+      <ul>
+        <li
+          onClick={() => {
+            window.open(
+              `https://twitter.com/${username}/status/${id}`,
+              "_blank"
+            );
+          }}
+        >
+          Open in Twitter
+        </li>
+        <li
+          onClick={() => {
+            handleBookmark;
+          }}
+        >
+          Bookmark
+        </li>
+
+        {mentions?.map((mention) => (
+          <li
+            key={mention.id}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowModal(true);
+              setSelectedMention(mention);
+            }}
+          >
+            Add @{mention.username} to list
+          </li>
+        ))}
+      </ul>
+      {showModal && (
+        <AddToListModal
+          isOpen={showModal}
+          onRequestClose={() => setShowModal(false)}
+          selectedMention={selectedMention}
+          ownedLists={ownedLists}
+          setShowModal={setShowModal}
+          showModal={showModal}
+        />
+      )}
+    </div>
+  );
 };

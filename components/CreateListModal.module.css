@@ -206,10 +206,6 @@
     background-color: rgba(93, 108, 139, 0.2);
 }
 
-.suggetions ul li div {
-    display: flex;
-    flex-direction: column;
-}
 
 .suggestions img {
     border-radius: 50%;

@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import Image from "next/image";
 import router from "next/router";
 import { useEffect, useState } from "react";
+import { Spinner } from "../../components/Spinner";
 import { ListType, User } from "../../types";
 import styles from "./../../styles/discover.module.css";
 
@@ -21,6 +22,7 @@ export const Discover: NextPage<Props> = ({
   openSidebar,
 }) => {
   const [lists, setLists] = useState<ListType[]>();
+  const [loading, setLoading] = useState<boolean>(true);
 
   const usersListsIds = usersLists.map((list) => list.id);
 
@@ -33,20 +35,22 @@ export const Discover: NextPage<Props> = ({
     );
 
     const fetchSuggLists = async () => {
-      const res = await Promise.all(
+      const lists = await Promise.all(
         followedListOwnerUsernames.map(async (username) => {
           const res = await fetch(`/api/user/${username}`);
           const data = await res.json();
           return data;
         })
       );
-      console.log(res, "&&&&&");
-      const flatLists = res.map((user) => user.lists).flat();
-      const suggLists = flatLists.filter(
+      console.log(lists, "res");
+      const flatLists = lists.map((user) => user.lists).flat();
+
+      const suggestedLists = flatLists.filter(
         (list) => !usersListsIds.includes(list.id)
       );
-      console.log(suggLists, "suggLists");
-      setLists(suggLists);
+      console.log(suggestedLists, "suggLists");
+      setLists(suggestedLists);
+      setLoading(false);
     };
 
     fetchSuggLists();
@@ -74,7 +78,9 @@ export const Discover: NextPage<Props> = ({
     }
   };
 
-  console.log(lists);
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <div className={styles.container}>

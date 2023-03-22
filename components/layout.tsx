@@ -12,20 +12,19 @@ import { Sidebar } from "./Sidebar";
 interface Props {
   children: React.ReactNode;
   user: User;
+  following: User[];
   lists: ListType[];
   showSidebar: boolean;
   closeSidebar: () => void;
-  openSidebar: () => void;
-  following: User[];
 }
 
 export const Layout: NextPage<Props> = ({
   children,
   user,
+  following,
   lists,
   showSidebar,
   closeSidebar,
-  following,
 }) => {
   const [showCreateListModal, setShowCreateListModal] = useState(false);
   const [showAddToListModal, setShowAddToListModal] = useState(false);

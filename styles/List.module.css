@@ -15,13 +15,11 @@
     width: 700px;
     border: 1px solid grey;
     background-color: rgb(255, 238, 213);
-    border: 1px solid green;
     height: 60px;
     display: flex;
     align-items: center;
     padding: 4px 10px;
     align-items: center;
-    border: 1px solid yellow;
 }
 
 
@@ -63,8 +61,6 @@
 .list {
     margin-top: 60px;
 }
-
-
 
 .list {
     align-items: center;
@@ -114,7 +110,6 @@
 }
 
 .subtext {
-    /* set slightly less white color */
     color: rgb(77, 75, 75);
 }
 
@@ -146,8 +141,14 @@
 }
 
 .unFollowButton {
-    background-color: #1b222a;
+    background-color: #346195;
     color: white;
+}
+
+.followButton {
+    background-color: rgb(249, 224, 190);
+    color: black;
+    border: 1px solid grey;
 }
 
 /* ################################* Members Modal *######################################### */
@@ -188,6 +189,7 @@
 .modalHeader h1 {
     margin: 0px;
     padding: 0px;
+    font-size: 20px;
 }
 
 
@@ -219,11 +221,11 @@
     border: 1px solid grey;
 }
 
-.modal ul {
+.editMembers ul {
     padding: 0;
 }
 
-.modal li {
+.editMembers li {
     list-style-type: none;
     padding: 10px 30px;
     display: flex;
@@ -231,9 +233,29 @@
     justify-content: flex-start;
 }
 
-.modal li:hover {
+.editMembers li:hover {
     cursor: pointer;
     background-color: rgb(210, 203, 192);
+}
+
+.editMembers ul li {
+    display: flex;
+    align-items: center;
+}
+
+.editMembers ul li .user {
+    width: 90%;
+}
+
+.editMembers {
+    display: flex;
+
+}
+
+.editMembers button {
+    margin: 5px;
+    padding: 10px;
+    height: fit-content;
 }
 
 .modal span {
@@ -270,40 +292,64 @@
 .selectedMembers ul li {
     display: flex;
     align-items: center;
+    justify-content: center;
     font-size: 14px;
     border: 1px solid #1da1f2;
     border-radius: 12px;
     background-color: #dbeaf3;
+    padding: 0px;
     margin-right: 5px;
     margin-bottom: 4px;
+    text-align: center;
 }
 
 .selectedMembers ul li svg {
-    margin: 0px 5px;
     cursor: pointer;
+}
+
+.selectedMembers span {
+    margin: auto;
 }
 
 .selectedMembers img {
     border-radius: 50%;
-    margin: 3px 8px;
+
+    width: 20px;
+    height: 20px;
 }
 
 .addMembers {
     margin-bottom: 10px;
-    min-height: 250px;
+    min-height: 420px;
+    padding: 20px;
+    padding-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .addMembers input {
-    margin: 0px;
+    margin-top: 5px;
+    padding: 5px;
     width: 100%;
+    font-size: 18px;
 }
 
-.suggestions {
+.addMembers button {
+    margin-top: 5px;
+    padding: 8px;
     width: 100%;
+    font-size: 18px;
+    border: none;
+    background-color: #1da1f2;
+    color: white;
+    border-radius: 5px;
 }
+
 
 .suggestions {
     border: 1px solid #1da1f2;
+    width: 100%;
     padding: 0px;
     margin: 0px;
 }
@@ -317,22 +363,15 @@
 .suggestions ul li {
     display: flex;
     align-items: center;
-    /* margin-bottom: 10px; */
     font-size: 14px;
-    /* width: fit-content; */
     padding: 0px;
     background-color: white;
 }
 
 .suggestions ul li:hover {
     cursor: pointer;
-    background-color: rgba(93, 108, 139, 0.2);
 }
 
-.suggetions ul li div {
-    display: flex;
-    flex-direction: column;
-}
 
 .suggestions img {
     border-radius: 50%;
@@ -352,8 +391,8 @@
 .passive h2 {
     margin: 0;
     padding: 0;
+    font-size: 18px;
 }
-
 
 
 .active {
@@ -361,15 +400,26 @@
 }
 
 .passive {
-    /* background-color: rgb(217, 214, 214); */
     color: grey;
     cursor: pointer;
 }
-
 
 .modalRoutes {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* padding: 14px 20px; */
+}
+
+.editMembers button {
+    background-color: antiquewhite;
+    border-radius: 4px;
+    padding: 12px 8px;
+}
+
+.list button:hover {
+    outline: 1px solid rgb(56, 56, 56);
+}
+
+.addMembers button {
+    cursor: pointer;
 }

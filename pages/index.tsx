@@ -9,7 +9,6 @@ import { Tweet } from "../components/Tweet";
 
 import { ListType, TweetType, User } from "../types";
 
-// server side props
 export async function getServerSideProps(context: any) {
   const cookies = context.req.cookies;
 
@@ -23,10 +22,8 @@ export async function getServerSideProps(context: any) {
 interface Props {
   user: User;
   lists: ListType[];
-  handleListsChange: (updatedLists: ListType[]) => void;
   showSidebar: boolean;
   openSidebar: () => void;
-  closeSidebar: () => void;
 }
 
 const Home: NextPage<Props> = ({ user, lists, showSidebar, openSidebar }) => {

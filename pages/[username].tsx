@@ -12,7 +12,6 @@ interface Props {
   handleListsChange: (updatedLists: ListType[]) => void;
   showSidebar: boolean;
   openSidebar: () => void;
-  closeSidebar: () => void;
 }
 
 export const Profile: NextPage<Props> = ({
@@ -20,7 +19,6 @@ export const Profile: NextPage<Props> = ({
   handleListsChange,
   showSidebar,
   openSidebar,
-  closeSidebar,
 }) => {
   const router = useRouter();
   const { username } = router.query;
@@ -43,27 +41,22 @@ export const Profile: NextPage<Props> = ({
   }, [username]);
 
   const actionList = async (list: ListType, action: string) => {
-    try {
-      const res = await fetch(`/api/action`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          listId: list.id,
-          action,
-        }),
-      });
-      const data = await res.json();
-      if (list) {
-        const updatedLists =
-          action === "followList"
-            ? [...usersLists, list]
-            : usersLists.filter((l) => l.id !== list.id);
-        handleListsChange(updatedLists);
-      }
-    } catch (error) {
-      console.log(error);
+    const res = await fetch(`/api/action`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        listId: list.id,
+        action,
+      }),
+    });
+    if (list) {
+      const updatedLists =
+        action === "followList"
+          ? [...usersLists, list]
+          : usersLists.filter((l) => l.id !== list.id);
+      handleListsChange(updatedLists);
     }
   };
 
@@ -76,6 +69,8 @@ export const Profile: NextPage<Props> = ({
     lists?.filter((list) => list.owner.id !== user.id) || [];
 
   const usersListsIds = usersLists.map((list) => list.id);
+
+  const isOwner = user.username === username;
 
   return (
     <div className={styles.container}>
@@ -108,9 +103,8 @@ export const Profile: NextPage<Props> = ({
           height={60}
         />
         <h1>{user.name}</h1>
-        <h2>@{user.username}</h2>
+        <span className={styles.username}>@{user.username}</span>
         <span>{user.description}</span>
-        <button>Follow</button>
       </div>
 
       <div className={styles.lists}>
@@ -143,25 +137,28 @@ export const Profile: NextPage<Props> = ({
                       <span>{user.name}</span>
                     </div>
                   </div>
-
-                  {usersListsIds.includes(list.id) ? (
-                    <button
-                      className={styles.unFollowButton}
-                      onClick={() => {
-                        actionList(list, "unFollowList");
-                      }}
-                    >
-                      Unfollow
-                    </button>
-                  ) : (
-                    <button
-                      className={styles.followButton}
-                      onClick={() => {
-                        actionList(list, "followList");
-                      }}
-                    >
-                      Follow
-                    </button>
+                  {!isOwner && (
+                    <>
+                      {usersListsIds.includes(list.id) ? (
+                        <button
+                          className={styles.unFollowButton}
+                          onClick={() => {
+                            actionList(list, "unFollowList");
+                          }}
+                        >
+                          Unfollow
+                        </button>
+                      ) : (
+                        <button
+                          className={styles.followButton}
+                          onClick={() => {
+                            actionList(list, "followList");
+                          }}
+                        >
+                          Follow
+                        </button>
+                      )}
+                    </>
                   )}
                 </li>
               ))}
