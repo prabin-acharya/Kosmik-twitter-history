@@ -12,18 +12,20 @@ export default function App({ Component, pageProps }: AppProps) {
   const [lists, setLists] = useState<ListType[]>([]);
   const [following, setFollowing] = useState<User[]>([]);
   const [showSidebar, setShowSidebar] = useState(true);
-  const [responseStatus, setResponseStatus] = useState<number>();
 
   const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
       const res = await fetch(`/api/me`);
-      const data = await res.json();
 
-      if (res.status !== 200) {
-        setResponseStatus(res.status);
+      if (!res.ok) {
+        res.status === 403 && router.push("/signin");
+        res.status === 429 && router.push("/500");
+        res.status === 401 && (await refreshToken());
       }
+
+      const data = await res.json();
 
       setUser(data.user);
       setLists(data.lists);
@@ -31,10 +33,19 @@ export default function App({ Component, pageProps }: AppProps) {
       setUserLoading(false);
     };
 
-    fetchUser();
-  }, []);
+    const refreshToken = async () => {
+      console.log("Refresh Token");
+      const res = await fetch("/api/auth/refresh");
+      console.log(res);
+      if (!res.ok) {
+        router.push("/signin");
+      }
+    };
 
-  // handle app
+    fetchUser();
+  }, [router]);
+
+  // handle app layout changes
   const handleListsChange = (updatedLists: ListType[]) => {
     setLists(updatedLists);
   };
@@ -65,42 +76,12 @@ export default function App({ Component, pageProps }: AppProps) {
 
   //
 
-  if (router.pathname === "/signin") return <Component {...pageProps} />;
-
-  // handle response
-
-  switch (responseStatus) {
-    case 500:
-      console.log("500: Too many requests");
-
-      return (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-          }}
-        >
-          Too many requests. Try agian in 10 minutes.
-        </div>
-      );
-    case 401:
-      console.log("401: Unauthorized");
-      // Unauthorized
-      // refresh token???
-      router.push("/signin");
-    // fetch("/api/auth/refresh");
-
-    case 404:
-      return <div>404</div>;
-    default:
-      break;
-  }
-
-  // if (!isUserLoading && !user) {
-  //   router.push("/signin");
-  // }
+  if (
+    router.pathname === "/signin" ||
+    router.pathname === "/500" ||
+    router.pathname === "/404"
+  )
+    return <Component {...pageProps} />;
 
   if (isUserLoading || !user || !lists) {
     return <Spinner />;
@@ -109,21 +90,17 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <Layout
       user={user}
+      following={following}
       lists={lists}
       showSidebar={showSidebar}
-      openSidebar={openSidebar}
       closeSidebar={closeSidebar}
-      following={following}
     >
       <Component
         {...pageProps}
         user={user}
         following={following}
         lists={lists}
-        handleListsChange={handleListsChange}
-        showSidebar={showSidebar}
         openSidebar={openSidebar}
-        closeSidebar={closeSidebar}
       />
     </Layout>
   );

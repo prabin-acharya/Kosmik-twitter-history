@@ -21,7 +21,7 @@ export default async function handler(
   const access_Token = req.cookies.access_Token as string;
 
   if (!access_Token) {
-    res.status(401).json({
+    res.status(403).json({
       Error: " User not authenticated",
     });
     return;

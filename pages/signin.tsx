@@ -13,16 +13,14 @@ const Signin: NextPage<Props> = () => {
   return (
     <div className={styles.container}>
       <nav>
-        <Link href="/">Kosmik</Link>
+        <Link href="/">Kosmik</Link>{" "}
       </nav>
       <div className={styles.signin}>
-        {/* <h1>Sign in</h1> */}
-        <h1>What{"'"} Happened?</h1>
+        <h1>What has Happened?</h1>
 
         <br />
 
         <button
-          //   onclick redirect to
           onClick={() => {
             router.push("/api/auth");
           }}
