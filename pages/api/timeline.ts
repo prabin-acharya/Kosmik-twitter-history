@@ -45,13 +45,15 @@ export default async function handler(
 
     let timelineTweets: string | any[] = [];
 
-    // Define the date range
     let from = new Date((req.query.from as string) || "2011-01-01");
     let to = new Date((req.query.to as string) || "2021-01-01");
 
-    // Define the interval
     const intervalTime = to.getTime() - from.getTime();
     const interval = intervalTime / 3;
+
+    members = shuffleArray(members);
+    console.log(members.length);
+    console.log(members.slice(0, 5));
 
     const getTweetsTimeline = async (
       dateFrom: Date,
@@ -61,10 +63,11 @@ export default async function handler(
       // get 10 tweets for each member
 
       // const members = following.slice(0, 4);
+      members = members.slice(0, 8);
 
       const randomizedFollowingOrderedTweets = members.map(async (user) => {
         const options: Partial<TweetV2UserTimelineParams> = {
-          max_results: 10,
+          max_results: 5,
           start_time: dateFrom.toISOString(),
           end_time: dateTo.toISOString(),
 
@@ -110,16 +113,27 @@ export default async function handler(
           });
         }
 
+        console.log(tweets, "++++++++++++++===");
+
         return tweets;
       });
 
+      console.log("********************************");
+
       const UsersTweets = await Promise.all(randomizedFollowingOrderedTweets);
+
+      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^6");
+
+      console.log(
+        UsersTweets.flat().length,
+        "------/n########################"
+      );
 
       return UsersTweets.flat();
     };
 
     let i = 0;
-    while (timelineTweets.length < 20 || i < 3) {
+    while (timelineTweets.length < 10 || i < 3) {
       const dateFrom = new Date(from.getTime() + i * interval);
       const dateTo = new Date(from.getTime() + (i + 1) * interval);
 

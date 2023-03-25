@@ -64,7 +64,7 @@ const Home: NextPage<Props> = ({ user, lists, showSidebar, openSidebar }) => {
       ) : (
         <div className={styles.container}>
           <div className={styles.header}>
-            {user && !showSidebar && (
+            {/* {user && !showSidebar && (
               <Image
                 src={user?.profile_image_url as string}
                 width={30}
@@ -74,7 +74,7 @@ const Home: NextPage<Props> = ({ user, lists, showSidebar, openSidebar }) => {
                   openSidebar();
                 }}
               />
-            )}
+            )} */}
             <h1>Kosmik</h1>
           </div>
           <div className={styles.timeline}>

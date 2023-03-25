@@ -5,7 +5,6 @@ import {
   TwitterApi,
   TwitterV2IncludesHelper,
 } from "twitter-api-v2";
-import { UserDetail } from "../../components/UserDetail";
 
 interface User {
   id: string;
