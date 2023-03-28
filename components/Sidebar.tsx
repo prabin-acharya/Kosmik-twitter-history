@@ -22,6 +22,7 @@ export const Sidebar: NextPage<Props> = ({ user, lists, closeSidebar }) => {
   });
 
   const router = useRouter();
+  const [dateError, setDateError] = useState<string>("");
 
   useEffect(() => {
     const from = router.query.from as string;
@@ -41,10 +42,8 @@ export const Sidebar: NextPage<Props> = ({ user, lists, closeSidebar }) => {
 
   const ownedLists = lists.filter((list) => list.owner.id === user.id);
   const followedLists = lists.filter((list) => list.owner.id !== user.id);
-  console.log(router.asPath, "%%%");
 
   const createListUrl = router.asPath + "?createList=true";
-  console.log(createListUrl, "createListUrl");
 
   return (
     <div className={styles.sidebar}>
@@ -75,8 +74,6 @@ export const Sidebar: NextPage<Props> = ({ user, lists, closeSidebar }) => {
                 fill="none"
                 stroke="currentColor"
               >
-                {" "}
-                background-color: antiquewhite;
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
               </svg>
@@ -88,17 +85,21 @@ export const Sidebar: NextPage<Props> = ({ user, lists, closeSidebar }) => {
           <h4>Search</h4>
 
           <form
-            onSubmit={() => {
-              const url = `?from=${date?.from}&to=${date?.to}`;
-              router.push(url);
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (isValidDate(date.from) && isValidDate(date.to)) {
+                setDateError("");
+                const url = `?from=${date?.from}&to=${date?.to}`;
+                router.push(url);
+                console.log("valid");
+              } else {
+                setDateError("Please enter a valid date");
+              }
             }}
           >
             <div>
               <label htmlFor="from">From: </label>
               <input
-                type="date"
-                min="2010-01-01"
-                max="2022-12-01"
                 id="from"
                 name="from"
                 value={date?.from}
@@ -109,9 +110,6 @@ export const Sidebar: NextPage<Props> = ({ user, lists, closeSidebar }) => {
             <div>
               <label htmlFor="to">To: </label>
               <input
-                type="date"
-                min={date.from}
-                max="2022-12-01"
                 id="to"
                 name="to"
                 value={date?.to}
@@ -119,15 +117,10 @@ export const Sidebar: NextPage<Props> = ({ user, lists, closeSidebar }) => {
               />
             </div>
 
+            <div className={styles.error}>{dateError}</div>
+
             <div className={styles.submit}>
-              <button
-                onClick={() => {
-                  const url = `?from=${date?.from}&to=${date?.to}`;
-                  router.push(url);
-                }}
-              >
-                Go
-              </button>
+              <button>Go</button>
             </div>
           </form>
         </div>
@@ -193,20 +186,19 @@ export const Sidebar: NextPage<Props> = ({ user, lists, closeSidebar }) => {
         </div>
       </div>
       <div>
-        <Link
-          // href={`${router.asPath}/?createList=${true}`}
-          href={createListUrl}
-          as={`/i/create`}
-          className={styles.postCard}
-        >
-          {/* <svg viewBox="0 0 24 24" aria-hidden="true" className={styles.plus}>
-            <g>
-              <path d="M12 5v14M5 12h14"></path>
-            </g>
-          </svg> */}
+        <Link href={createListUrl} as={`/i/create`} className={styles.postCard}>
           Create a new list
         </Link>
       </div>
     </div>
   );
+};
+
+const isValidDate = (dateString: string) => {
+  const regEx = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateString.match(regEx)) return false; // Invalid format
+  const d = new Date(dateString);
+  const dNum = d.getTime();
+  if (!dNum && dNum !== 0) return false; // NaN value, Invalid date
+  return d.toISOString().slice(0, 10) === dateString;
 };
